@@ -1,0 +1,200 @@
+# services:
+
+#   # Backend:
+#   #   container_name: backend
+#   #   build:
+#   #     context: ./Backend
+#   #     dockerfile: Dockerfile
+#   #   image: backend
+#   #   ports:
+#   #      - 8000:8000
+#   #   networks:
+#   #     - transcendence_nt
+#   #   restart: always
+
+#   FrontEnd:
+#     container_name: frontEnd
+#     build:
+#       context: .
+#       dockerfile: Dockerfile
+#     image: nginx
+#     volumes:
+#     - transcendence:/usr/share/nginx/html
+#     ports:
+#     - "8008:80"
+#     networks:
+#       - transcendence_nt
+#     restart: always
+
+# volumes:
+#   transcendence:
+#     driver: local
+#     driver_opts:
+#       type: none
+#       o: bind
+#       device: /Users/rarraji/Desktop/joba/Testing
+
+# networks:
+#   transcendence_nt:
+#     driver: bridge
+
+services:
+  # portainer:
+  #   image: portainer/portainer-ce:latest
+  #   container_name: portainer
+  #   restart: always
+  #   ports:
+  #     - "9000:9000"
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock 
+  #     - portainer_data:/data
+  #   networks:
+  #     - monitoring
+  # db:
+  #   image: postgres:latest
+  #   container_name: db
+  #   environment:
+  #     POSTGRES_DB: djangodb
+  #     POSTGRES_USER: solix
+  #     POSTGRES_PASSWORD: 1337
+  #   ports:
+  #     - "5432:5432"
+  #   networks:
+  #     - monitoring
+
+  # pgadmin4:
+  #   image: dpage/pgadmin4
+  #   ports:
+  #     - 5050:80
+  #   container_name: pgadmin4
+  #   environment:
+  #     - PGADMIN_DEFAULT_EMAIL=solix0@gmail.com
+  #     - PGADMIN_DEFAULT_PASSWORD=1337
+  #   networks:
+  #     - monitoring
+  # node_exporter:
+  #   image: prom/node-exporter:latest
+  #   container_name: node-exporter
+  #   restart: unless-stopped
+  #   volumes:
+  #     - /proc:/host/proc:ro
+  #     - /sys:/host/sys:ro
+  #     - /:/rootfs:ro
+  #   command:
+  #     - '--path.procfs=/host/proc'
+  #     - '--path.rootfs=/rootfs'
+  #     - '--path.sysfs=/host/sys'
+  #     - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+  #   ports:
+  #     - "9200:9100"
+  #   privileged: true
+  #   networks:
+  #     - monitoring
+
+  # prometheus:
+  #   image: prom/prometheus:latest
+  #   container_name: prometheus
+  #   ports:
+  #     - "9090:9090"
+  #   volumes:
+  #     - prometheus_data:/prometheus  
+  #     - ./prometheus.yml:/etc/prometheus/prometheus.yml
+  #   networks:
+  #     - monitoring
+
+  # grafana:
+  #   image: grafana/grafana:latest
+  #   container_name: grafana
+  #   restart: unless-stopped
+  #   ports:
+  #     - "3000:3000"
+  #   volumes:
+  #     - grafana_data:/var/lib/grafana
+  #   environment:
+  #     - GF_SECURITY_ADMIN_USER=admin
+  #     - GF_SECURITY_ADMIN_PASSWORD=admin
+  #   networks:
+  #     - monitoring
+  Backend:
+    container_name: backend
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    image: backend
+    environment:
+      - ALLOWED_HOSTS=backend
+    ports:
+       - 8000:8000
+    volumes:
+      - ./logs:/var/log/django
+    networks:
+      - monitoring
+    restart: always
+    # depends_on:
+    #   - db
+  FrontEnd:
+    container_name: frontEnd
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+    image: nginx
+    volumes:
+    - frent:/usr/share/nginx/html
+    ports:
+    - "8008:80"
+    networks:
+      - monitoring
+    restart: always
+  # alertmanager:
+  #   image: prom/alertmanager
+  #   container_name: alertmanager
+  #   volumes:
+  #     - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml
+  #   ports:
+  #     - "9093:9093"
+  #   networks:
+  #     - monitoring
+  # elasticsearch:
+  #   image: docker.elastic.co/elasticsearch/elasticsearch:8.0.0
+  #   container_name: elasticsearch
+  #   environment:
+  #     - discovery.type=single-node
+  #     - xpack.security.enabled=false
+  #   ports:
+  #     - "9300:9200"
+  #   volumes:
+  #     - esdata:/usr/share/elasticsearch/data
+  # logstash:
+  #   image: docker.elastic.co/logstash/logstash:8.0.0
+  #   container_name: logstash
+  #   ports:
+  #     - "5044:5044"
+  #   volumes:
+  #     - ./logstash/pipeline:/usr/share/logstash/pipeline
+  # kibana:
+  #   image: docker.elastic.co/kibana/kibana:8.0.0
+  #   container_name: kibana
+  #   ports:
+  #     - "5601:5601"
+  #   environment:
+  #     - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+
+
+volumes:
+  prometheus_data:
+  monitoring:  
+  portainer_data:
+  grafana_data:
+  esdata:
+    driver: local
+  frent:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /mnt/c/Users/REDAV/Desktop/ft/Frontend
+  
+
+networks:
+  monitoring:
+    driver: bridge
