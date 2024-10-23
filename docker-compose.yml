@@ -192,7 +192,7 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: /mnt/c/Users/REDAV/Desktop/ft/Frontend
+      device: /Users/rarraji/Desktop/ft_trans/Frontend
   
 
 networks:

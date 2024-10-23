@@ -1,7 +1,73 @@
 import { urlHandler } from "./routes.js";
 
 
+let socket;
+let UserId;
+let roomname;
+let FriendId;
+let userName;
 
+function initializeWebSocket() 
+{
+    socket = new WebSocket(`ws://127.0.0.1:8000/ws/Chat/${roomname}/`);
+    console.log("WebSocket connection being established...");
+
+    socket.onopen = function() {
+        console.log('WebSocket connection established.');
+    };
+
+    socket.onmessage = function(event) 
+    {
+        console.log('Received message:');
+        const data = JSON.parse(event.data);
+
+        if (data.message) 
+        {
+            if(data.id == UserId)
+            {
+                console.log("dkhel agonss onmessage");
+                addMessage(data.message, 'user');
+                fetch("http://127.0.0.1:8000/chat/messages/", 
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        'sender_id': UserId,
+                        'receiver_id': FriendId,
+                        'roomname': roomname,
+                        'content': data.message,
+                    }),
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erreur lors de la sauvegarde du message.');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Message et conversation sauvegardés:', data);
+                })
+                .catch(error => console.error('Erreur lors de la sauvegarde:', error));   
+            }
+            else
+            {
+                console.log("ikchm s else");
+                addMessage(data.message, 'other');            
+            }
+        }
+    };
+
+    socket.onerror = function(error) {
+        console.error('WebSocket Error:', error);
+    };
+
+    socket.onclose = function() {
+        console.log('WebSocket connection closed.');
+    };
+}
 
 export function massageScript() 
 {
@@ -33,13 +99,15 @@ export function massageScript()
             const messageInput = document.getElementById('chat-input');
             const message = messageInput.value;
             
-            if (message.trim() !== '') {
+            if (message.trim() !== '') 
+            {
                 addMessage(message, 'user');
                 messageInput.value = '';
             }
         }
 
-        const ghid = (e) => {
+        const ghid = (e) => 
+        {
             console.log("acht sghid");
             new_message();
         };
@@ -61,7 +129,7 @@ export function showUser()
           .then((data) => 
           {
             console.log(data);
-            // const username1 = data.data.username;
+            // const username1 = data.data.username.;
             const userName = data.data.username;
             console.log('20');
             console.log(userName);
@@ -77,7 +145,22 @@ export function showUser()
           });
 }
 
-export function Showfriend() {
+export function Showfriend() 
+{
+        fetch("http://127.0.0.1:8000/api/profile/", 
+        {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        credentials: 'include',
+        })
+        .then((response) => response.json())
+        .then((data) => 
+        {
+            UserId = data.data.id;
+            userName = data.data.username;
+        })
         fetch('http://127.0.0.1:8000/api/users/',
         {
             method: "GET",
@@ -92,23 +175,44 @@ export function Showfriend() {
             const chatFriendsContainer = document.querySelector('.chat-friends');
             
             chatFriendsContainer.innerHTML = '';
-    
-            users.forEach(user => {
-            const friendDiv = document.createElement('div');
-            friendDiv.classList.add('chat-friend');
+            console.log("--->userName");
+            console.log(userName);
             
-            friendDiv.innerHTML = `
-                <img src="../images/profile.png" alt="${user.username}">
-                <p>${user.username}</p>
-                <span class="${user.status === 'online' ? 'online' : 'offline'}"></span>
-            `;
-    
-            chatFriendsContainer.appendChild(friendDiv);
+            users.forEach(user => {
+            if (user.username !== userName) 
+            {
+                const friendDiv = document.createElement('div');
+                console.log("UserId");
+                console.log(UserId);
+                friendDiv.id = user.id
+                friendDiv.addEventListener("click", ()=>
+                {
+                    FriendId = friendDiv.id;  
+                    if(friendDiv.id > UserId)
+                        roomname = UserId + friendDiv.id
+                    else
+                        roomname = friendDiv.id + UserId
+
+                    console.log("roomname");
+                    console.log(roomname);
+                    initializeWebSocket()
+                })
+                friendDiv.classList.add('chat-friend');
+                
+                friendDiv.innerHTML = `
+                    <img src="../images/profile.png" alt="${user.username}">
+                    <p>${user.username}</p>
+                    <span class="${user.status === 'online' ? 'online' : 'offline'}"></span>
+                `;
+        
+                chatFriendsContainer.appendChild(friendDiv);
+            }
             });
         })
         .catch(error => console.error('Error fetching users:', error));
 
 }
+
 export function ShowMysettings() {
     fetch("http://127.0.0.1:8000/api/profile/", 
         {

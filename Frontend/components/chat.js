@@ -75,6 +75,7 @@ document.getElementById("message").onclick = login;
 }
 
 function addMessage(message, sender) {
+    console.log("redas");
     const chatBox = document.getElementById('chat-content');
     const messageElement = document.createElement('p');
     if (sender === 'user') {
@@ -96,3 +97,5 @@ function new_message() {
         messageInput.value = '';
     }
 }
+
+//Amaitou@1234C
