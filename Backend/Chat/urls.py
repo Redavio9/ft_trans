@@ -5,12 +5,14 @@ from . import views
 
 
 router = DefaultRouter()
-router.register(r'messages', messageviewset)
-router.register(r'conversations', conversationviewset)
-router.register(r'userstats', userstatsviewset)
-
+router.register(r'messages', MessageViewSet)
+# router.register(r'conversations', conversationviewset)
+router.register(r'conversations', ConversationViewSet, basename='conversation')
+router.register(r'userstats', UserStatsViewSet)
+# router.register(r'createview', MessageCreateView)
+# router.register(r'createview', MessageCreateView, basename='message-create')
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('userstats/<int:pk>/status/', userstatsviewset.as_view({'get': 'status'}), name='userstats-status'),
+    path('userstats/<int:pk>/status/', UserStatsViewSet.as_view({'get': 'status'}), name='userstats-status'),
 ]

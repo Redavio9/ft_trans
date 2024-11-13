@@ -6,61 +6,40 @@ import os
 
 load_dotenv()
 
+ALLOWED_HOSTS = ['*']
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+MEDIA_URL = '/media/'
 SECRET_KEY = os.environ.get('SECRET_KEY')
-
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': False,
-#     'formatters': {
-#         'verbose': {
-#             'format': '{levelname} {asctime} {module} {message}',
-#             'style': '{',
-#         },
-#     },
-#     'handlers': {
-#         'file': {
-#             'level': 'DEBUG',
-#             'class': 'logging.FileHandler',
-#             'filename': '/var/log/django/django.log',
-#             'formatter': 'verbose',
-#         },
-#     },
-#     'loggers': {
-#         'django': {
-#             'handlers': ['file'],
-#             'level': 'DEBUG',
-#             'propagate': True,
-#         },
-#     },
-# }
 
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
-
 if not DEBUG:
-    ALLOWED_HOSTS = ['backend', 'localhost', '127.0.0.1']
+    ALLOWED_HOSTS = ['127.0.0.1']
 
 # Application definition
 INSTALLED_APPS = [
     'daphne',
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'API.apps.ApiConfig',
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
-    'channels',
     'Chat',
-    'django_prometheus', 
+    'RealTimeNotifications',
+    'django_prometheus',
+    'tournament',
+    'django_extensions',
 ]
 
 REST_FRAMEWORK = {
@@ -73,8 +52,8 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
     'USER_ID_FIELD': 'id',
@@ -82,21 +61,21 @@ SIMPLE_JWT = {
 }
 
 MIDDLEWARE = [
-
+    'django_prometheus.middleware.PrometheusBeforeMiddleware',
+    
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     
-    'API.middlewares.CookieTokenAuthentication',
+    'API.middlewares.TokenRefresherMiddleware',
     'corsheaders.middleware.CorsMiddleware',
 
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    'django_prometheus.middleware.PrometheusBeforeMiddleware' , 
-    'django_prometheus.middleware.PrometheusAfterMiddleware' , 
+    'django_prometheus.middleware.PrometheusAfterMiddleware',
 ]
 
 
@@ -121,23 +100,26 @@ TEMPLATES = [
 WSGI_APPLICATION = 'Backend.wsgi.application'
 ASGI_APPLICATION = 'Backend.asgi.application'
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
+
+#-----------------config postgres-------------------#
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': "djangodb",
+        'USER': "solix",
+        'PASSWORD': "1337",
+        'HOST': 'postgres',
+        'PORT': '5432',
     }
 }
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': "djangodb",
-#         'USER': "solix",
-#         'PASSWORD': "1337",
-#         'HOST': 'db',
-#         'PORT': '5432',
-#     }
-# }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -162,15 +144,25 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+# CHANNEL_LAYERS = {
+#     'default': {
+#         'BACKEND': 'channels.layers.InMemoryChannelLayer',
+#     },
+# }
+
 CHANNEL_LAYERS = {
     'default': {
-        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('redis', 6379)],
+        },
     },
 }
 
 
-CORS_ALLOW_CREDENTIALS = True
+
 CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
 AUTH_USER_MODEL = 'API.UserInfo'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -184,7 +176,6 @@ AUTH_URL = os.environ.get('AUTH_URL')
 # Short Names
 ACCESS_TOKEN = "access_token"
 REFRESH_TOKEN = "refresh_token"
-AUTH_HEADER_NAME = os.environ.get("AUTH_HEADER_NAME")
 
 # Email Settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -194,4 +185,14 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
+# SSL Certificates
 os.environ['SSL_CERT_FILE'] = certifi.where()
+
+
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': 'redis://redis:6379/1',
+    }
+}

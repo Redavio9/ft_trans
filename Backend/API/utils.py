@@ -2,6 +2,12 @@ from django.core.mail import EmailMessage
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 from django.core.exceptions import ValidationError
 from .models import UserInfo
+import random
+import string
+from datetime import timedelta
+from django.utils import timezone
+import jwt
+from django.conf import settings
 
 class Utils:
     """
@@ -85,3 +91,37 @@ class Utils:
 
         if errors:
             raise ValidationError(errors)
+    
+    @staticmethod
+    def generate_otp_code():
+        """
+        This method generates a random 6-digit OTP code.
+        """
+        return ''.join(random.choices(string.digits, k=6))
+
+    @staticmethod
+    def generate_otp_expiration():
+        """
+        This method generates a time for the OTP code.
+        """
+        return timezone.now() + timedelta(minutes=15)
+    
+    @staticmethod
+    def create_one_time_jwt(user):
+        """
+        This method creates a one-time JWT for a given user.
+        It returns a dictionary containing the access and refresh tokens.
+        """
+        payload = {
+            'user_id': user.id,
+            'exp': timezone.now() + timedelta(minutes=2)
+        }
+        token = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
+        return token
+    
+    @staticmethod
+    def get_current_time():
+        """
+        This method returns the current time.
+        """
+        return timezone.now()
