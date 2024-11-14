@@ -1,4 +1,5 @@
 import { urlHandler } from '../scripts/routes.js';
+import { handleViewMessage } from '../scripts/generalMessage.js';
 
 export function SingUpComponent() {
   return (`
@@ -112,13 +113,23 @@ export function singupScript() {
             // check if the password is less than 6 characters and contain at least one number and one letter and one special character and one uppercase letter
             const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
             if (!passwordRegex.test(password)) {
-                alert('Password must contain at least one number, one letter, one special character, one uppercase letter and at least 6 characters');
+                handleViewMessage({
+                    message: 'Password must contain at least one number, one letter, one special character, one uppercase letter and at least 6 characters',
+                    type: 'error',
+                    title: 'Error',
+                    icon: 'fas fa-exclamation-circle'
+                })
                 return;
             }
 
             // check if the password and re-password are the same
             if (password !== rePassword) {
-                alert('Password and Confirm Password are not the same');
+                handleViewMessage({
+                    message: 'Password and Confirm Password are not the same',
+                    type: 'error',
+                    title: 'Error',
+                    icon: 'fas fa-exclamation-circle'
+                })
                 return;
             }
 
@@ -134,7 +145,13 @@ export function singupScript() {
                     }
                 }
                 if (genderValue === '') {
-                    alert('Please select your gender ');
+                    handleViewMessage({
+                        message: 'Please select your gender',
+                        type: 'error',
+                        title: 'Error',
+                        icon: 'fas fa-exclamation-circle'
+                    })
+                    return ;
                 }
             }
 
@@ -156,15 +173,30 @@ export function singupScript() {
             }).then(response => response.json())
                 .then(data => {
                     if (data.error) {
-                        alert(data.error);
+                        handleViewMessage({
+                            message: data.error,
+                            type: 'error',
+                            title: 'Error',
+                            icon: 'fas fa-exclamation-circle'
+                        })
                     } else {
-                        alert('User created successfully');
+                        handleViewMessage({
+                            message: 'Your account has been created successfully',
+                            type: 'success',
+                            title: 'Success',
+                            icon: 'fas fa-check-circle'
+                        })
                         history.pushState(null, null, '/singin');
                         urlHandler();
                     }
                 })
                 .catch((error) => {
-                    alert('Error: ' + error);
+                    handleViewMessage({
+                        message: 'Failed to create account',
+                        type: 'error',
+                        title: 'Error',
+                        icon: 'fas fa-exclamation-circle'
+                    })
                 });
         })
     }
