@@ -126,8 +126,6 @@ function friendsList(friends) {
         `)
     }
     const innerHTML = friends.map(r => {
-        console.log(r.friend)
-        console.log(r.friend.online) 
         return (`
             <div class="friend-card"style="display: flex;">
                 <div class="friend-info">

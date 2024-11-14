@@ -48,7 +48,6 @@ export async function fetchProfile() {
     if (!globalState.ws)
         globalState.ws = new WebSocket(`ws://127.0.0.1:8000/ws/realtimenotifications/${globalState.user.username}/`);
     globalState.ws.onmessage = function (e) {
-        console.log('its enter')
         const data = JSON.parse(e.data);
         if (data.message.type === 'friend_request')
             showFriendRequest(data.message.message.sender);
@@ -58,7 +57,6 @@ export async function fetchProfile() {
             handleFriendDecline({title: 'Friend Request Declined', message: data.message.message.sender + ' has declined your friend request', icon: 'fas fa-user-minus', type: 'info'});
         else if (data.message.type === 'online') {
             globalState.onlineUsers = data.message.users;
-            console.log(globalState.onlineUsers);
         }
     }
 
