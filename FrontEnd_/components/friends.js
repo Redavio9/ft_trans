@@ -34,11 +34,19 @@ export async function friendsComponent() {
 export function friendsContent(friends, requests) {
     let userRequestLength = 0;
     let userFriendsLength = 0;
+    let userOnlineLength = 0;
 
     if (globalState.friends) 
         userFriendsLength = globalState.friends.length
     if (globalState.requests)
         userRequestLength = globalState.requests.length;
+
+    if (globalState.onlineUsers){
+        // check online users if they are in the friends list
+        userOnlineLength = globalState.onlineUsers.filter(user => {
+            return friends.find(f => f.friend.username === user);
+        }).length;
+    }
 
     return (`
     <div class="friends-list" w-tid="6">
@@ -50,7 +58,7 @@ export function friendsContent(friends, requests) {
                     <div class="stat-label" w-tid="12">Total Friends</div>
                 </div>
                 <div class="stat-card" w-tid="13">
-                    <div class="stat-number" w-tid="14">0</div>
+                    <div class="stat-number" w-tid="14">${userOnlineLength}</div>
                     <div class="stat-label" w-tid="15">Online Now</div>
                 </div>
                 <div class="stat-card" w-tid="16">
