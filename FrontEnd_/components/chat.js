@@ -240,7 +240,8 @@ export async function chatScript() {
     {
         new_message()
     }
-    document.getElementById("message").onclick = login;
+    if(document.getElementById("message"))
+        document.getElementById("message").onclick = login;
 }
 
 

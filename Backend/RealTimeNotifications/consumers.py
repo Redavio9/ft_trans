@@ -12,6 +12,13 @@ class RealTimeNotificationsConsumer(AsyncWebsocketConsumer):
         if user not in connections:
             connections[user] = self.channel_name
         await self.accept()
+        message = {
+            'message': {
+                'type': 'online',
+                'users': list(connections.keys())
+            }
+        }
+        await self.send(text_data=json.dumps(message))
         
     
     async def disconnect(self, close_code):

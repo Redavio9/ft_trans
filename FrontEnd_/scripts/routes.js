@@ -31,6 +31,7 @@ function loadingSpinner() {
         }
     } else {
         // // calback after 1s
+        // console.log(globalState.onlineUsers)
         snniper.style.display = 'block';
         site.style.display = 'none';        
         setTimeout(loadingSpinner, 100);
