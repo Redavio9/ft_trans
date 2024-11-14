@@ -10,7 +10,24 @@ export const globalState = {
     ws: null,
     onlineUsers: null,
 };
-  
+
+export const globalTournamentState = {
+    name: 'Tournament',
+    round1: {
+        match1: {player1: {username: 'tmp', score: null}, player2: {username: 'Bob', score: null}},
+        match2: {player1: {username: 'Charlie', score: null}, player2: {username: 'David', score: null}},
+        match3: {player1: {username: 'Eve', score: null}, player2: {username: 'Frank', score: null}},
+        match4: {player1: {username: 'Grace', score: null}, player2: {username: 'grave', score: null}},
+    },
+    round2: {
+        match1: {player1: {username: 'wating...', score: null}, player2: {username: 'wating...', score: null}},
+        match2: {player1: {username: 'wating...', score: null}, player2: {username: 'wating...', score: null}},
+    },
+    round3: {
+        match1: {player1: {username: 'wating...', score: null}, player2: {username: 'wating...', score: null}},
+    }
+}
+
 export async function fetchProfile() {
     const response = await fetch('http://127.0.0.1:8000/api/profile/', {
         method: 'GET',
@@ -22,6 +39,7 @@ export async function fetchProfile() {
 
     const userData = await response.json();
     globalState.user = userData.user;
+    globalTournamentState.round1.match1.player1.username = globalState.user.username;
     globalState.requests = userData.user.friend_requests;
     globalState.sendRequests = userData.user.sent_requests;
     globalState.friends = userData.user.friends;
