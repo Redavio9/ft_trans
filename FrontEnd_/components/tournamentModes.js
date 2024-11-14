@@ -27,18 +27,18 @@ export async function firstModeComponent() {
 
 function matchTemplate(match) {
     return (`
-        <div class="match in-progress" w-tid="43">
-            <div class="player winner" w-tid="44">
-                <span class="player-name" w-tid="45">${match.player1.username}</span>
-                <span class="player-score" style="display: none;" w-tid="46">${match.player1.score}</span>
+        <div class="match in-progress">
+            <div class="player winner">
+                <span class="player-name">${match.player1.username}</span>
+                <span class="player-score">${match.player1.score}</span>
             </div>
-            <div class="player" w-tid="47">
-                <span class="player-name" w-tid="48">${match.player2.username}</span>
-                <span class="player-score" style="display: none;" w-tid="49">${match.player2.score}</span>
+            <div class="player">
+                <span class="player-name">${match.player2.username}</span>
+                <span class="player-score">${match.player2.score}</span>
             </div>
-            <div class="paddle paddle-left" w-tid="50"></div>
-            <div class="paddle paddle-right" w-tid="51"></div>
-            <div class="ball" w-tid="52"></div>
+            <div class="paddle paddle-left"></div>
+            <div class="paddle paddle-right"></div>
+            <div class="ball"></div>
         </div>
     `)
 }

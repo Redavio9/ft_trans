@@ -14,17 +14,17 @@ export const globalState = {
 export const globalTournamentState = {
     name: 'Tournament',
     round1: {
-        match1: {player1: {username: 'tmp', score: null}, player2: {username: 'Bob', score: null}},
-        match2: {player1: {username: 'Charlie', score: null}, player2: {username: 'David', score: null}},
-        match3: {player1: {username: 'Eve', score: null}, player2: {username: 'Frank', score: null}},
-        match4: {player1: {username: 'Grace', score: null}, player2: {username: 'grave', score: null}},
+        match1: {player1: {username: 'tmp', score: 0}, player2: {username: 'Bob', score: 0}},
+        match2: {player1: {username: 'Charlie', score: 0}, player2: {username: 'David', score: 0}},
+        match3: {player1: {username: 'Eve', score: 0}, player2: {username: 'Frank', score: 0}},
+        match4: {player1: {username: 'Grace', score: 0}, player2: {username: 'grave', score: 0}},
     },
     round2: {
-        match1: {player1: {username: 'wating...', score: null}, player2: {username: 'wating...', score: null}},
-        match2: {player1: {username: 'wating...', score: null}, player2: {username: 'wating...', score: null}},
+        match1: {player1: {username: 'wating...', score: 0}, player2: {username: 'wating...', score: 0}},
+        match2: {player1: {username: 'wating...', score: 0}, player2: {username: 'wating...', score: 0}},
     },
     round3: {
-        match1: {player1: {username: 'wating...', score: null}, player2: {username: 'wating...', score: null}},
+        match1: {player1: {username: 'wating...', score: 0}, player2: {username: 'wating...', score: 0}},
     }
 }
 
