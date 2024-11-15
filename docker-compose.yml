@@ -1,0 +1,168 @@
+
+services:
+
+  Backend:
+    container_name: backend
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    image: backend
+    environment:
+      - ALLOWED_HOSTS=backend
+    ports:
+      - 8000:8000
+    volumes:
+      - ./logs:/var/log/django
+    networks:
+      - monitoring
+    restart: always
+    depends_on:
+      - db
+      - grafana
+      - redis
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_DB: djangodb
+      POSTGRES_USER: solix
+      POSTGRES_PASSWORD: 1337
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - monitoring
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - monitoring
+  
+  FrontEnd:
+    container_name: frontEnd
+    build:
+      context: ./FrontEnd
+      dockerfile: Dockerfile
+    image: nginx
+    volumes:
+    - frent:/usr/share/nginx/html
+    - ./FrontEnd/conf/nginx.conf:/etc/nginx/conf.d/default.conf
+    - ./FrontEnd/conf/empty.conf:/etc/nginx/conf.d/nginx.conf
+    ports:
+    - "8008:80"
+    networks:
+      - monitoring
+    depends_on:
+      - grafana
+
+
+#// ------------------------------------------------------- Monitoring ------------------------------------------------------------- //
+
+  # node_exporter:
+  #   image: prom/node-exporter:latest
+  #   container_name: node-exporter
+  #   volumes:
+  #     - /proc:/host/proc:ro
+  #     - /sys:/host/sys:ro
+  #     - /:/rootfs:ro
+  #   command:
+  #     - '--path.procfs=/host/proc'
+  #     - '--path.rootfs=/rootfs'
+  #     - '--path.sysfs=/host/sys'
+  #     - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+  #   ports:
+  #     - "9200:9100"
+  #   networks:
+  #     - monitoring
+  #   restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - prometheus_data:/prometheus  
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    restart: unless-stopped
+    networks:
+      - monitoring
+
+  nginx-exporter:
+    image: nginx/nginx-prometheus-exporter:latest
+    command: ["-nginx.scrape-uri", "http://frontEnd/nginx_status"]
+    ports:
+      - "9113:9113"
+    depends_on:
+      - frontend
+    networks:
+      - monitoring
+      
+
+  postgres-exporter:
+    image: wrouesnel/postgres_exporter:v0.8.0
+    container_name: postgres_exporter
+    restart: always
+    environment:
+      - DATA_SOURCE_URI=postgres:5432/postgres?sslmode=disable
+      - DATA_SOURCE_USER=solix
+      - DATA_SOURCE_PASS=1337
+    ports:
+      - "9187:9187"
+    networks:
+      - monitoring
+    depends_on:
+      - postgres
+      
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
+      # - ./grafana/dashboards:/var/lib/grafana/dashboards
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    networks:
+      - monitoring
+
+
+
+
+
+
+
+#// ------------------------------------------------------- Volumes ------------------------------------------------------------- //
+
+volumes:
+  postgres_data:
+    driver: local
+  postgres_exporter_data:
+    driver: local
+  prometheus_data:
+  monitoring:  
+  grafana_data:
+  portainer_data:
+  esdata:
+    driver: local
+  frent:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./Users/rarraji/Desktop/ft_trans/FrontEnd
+
+
+#// ------------------------------------------------------- Networks ------------------------------------------------------------- //
+
+networks:
+  monitoring:
+    driver: bridge
