@@ -1702,22 +1702,21 @@ body {
 }
 
 .chat-friends .chat-friend:hover {
-    background: linear-gradient(0deg, rgba(34, 193, 195, 1) 0%, rgba(0, 249, 229, 1) 100%);
+    background-color: #33343A;
     border-radius: 10px;
 }
 
 .chat-friends .chat-friend img {
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     margin-right: 20px;
     margin-left: 20px;
 }
 
 .chat-friends .chat-friend p {
-    color: #00fffc;
+    color: #E9E9EA;
     font-size: 16px;
-    font-family: monospace;
 }
 
 .chat-friends .chat-friend span {
@@ -1749,7 +1748,6 @@ body {
     align-items: center;
     padding: 12px;
     cursor: pointer;
-    margin-left: 20rem;
 }
 
 .chat-header .chat-profile img {
@@ -1763,11 +1761,6 @@ body {
 .chat-header .chat-profile p {
     color: #E9E9EA;
     font-size: 20px;
-}
-
-.invite-button:hover {
-    transform: scale(1.03);
-    box-shadow: 0 4px 8px #2d5b8d; 
 }
 
 .chat-content {
@@ -2173,7 +2166,6 @@ body {
 }
 
 .player-score {
-    background-color: #3DBDA7;
     color: #1D1E22;
     padding: 2px 8px;
     border-radius: 5px;
@@ -2196,6 +2188,14 @@ body {
 
 .first-mode .bottom-leave-button:hover {
     background-color: #FF4949;
+}
+
+.player.winner {
+    background: #3ebda7;
+}
+
+.player.loser {
+    background: red;
 }
 
 /* account Setting style sheet */

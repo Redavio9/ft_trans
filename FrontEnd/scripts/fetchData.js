@@ -13,18 +13,22 @@ export const globalState = {
 
 export const globalTournamentState = {
     name: 'Tournament',
+    isWinner: false,
+    isContinue: true,
+    vs: '',
+    aiLevel: 0.08,
     round1: {
-        match1: {player1: {username: 'tmp', score: null}, player2: {username: 'Bob', score: null}},
-        match2: {player1: {username: 'Charlie', score: null}, player2: {username: 'David', score: null}},
-        match3: {player1: {username: 'Eve', score: null}, player2: {username: 'Frank', score: null}},
-        match4: {player1: {username: 'Grace', score: null}, player2: {username: 'grave', score: null}},
+        match1: {player1: {username: 'tmp', score: null, status: 'waiting'}, player2: {username: 'Bob', score: null, status: 'waiting'}},
+        match2: {player1: {username: 'Charlie', score: null, status: 'waiting'}, player2: {username: 'David', score: null, status: 'waiting'}},
+        match3: {player1: {username: 'Eve', score: null, status: 'waiting'}, player2: {username: 'Frank', score: null, status: 'waiting'}},
+        match4: {player1: {username: 'Grace', score: null, status: 'waiting'}, player2: {username: 'grave', score: null, status: 'waiting'}},
     },
     round2: {
-        match1: {player1: {username: 'wating...', score: null}, player2: {username: 'wating...', score: null}},
-        match2: {player1: {username: 'wating...', score: null}, player2: {username: 'wating...', score: null}},
+        match1: {player1: {username: 'wating...', score: null, status: 'waiting'}, player2: {username: 'wating...', score: null, status: 'waiting'}},
+        match2: {player1: {username: 'wating...', score: null, status: 'waiting'}, player2: {username: 'wating...', score: null, status: 'waiting'}},
     },
     round3: {
-        match1: {player1: {username: 'wating...', score: null}, player2: {username: 'wating...', score: null}},
+        match1: {player1: {username: 'wating...', score: null, status: 'waiting'}, player2: {username: 'wating...', score: null, status: 'waiting'}},
     }
 }
 
@@ -55,8 +59,6 @@ export async function fetchProfile() {
             handleFriendAccept(data.message.message.sender);
         else if (data.message.type === 'friend_decline')
             handleFriendDecline({title: 'Friend Request Declined', message: data.message.message.sender + ' has declined your friend request', icon: 'fas fa-user-minus', type: 'info'});
-        else if (data.message.type === 'play with')
-            handleFriendDecline({title: 'Game ⭕❌', message: `play with ${data.message.message.sender} TIC TAC TOE` , icon: 'fas fa-gamepad', type: 'info'});
         else if (data.message.type === 'online') {
             globalState.onlineUsers = data.message.users;
         }
@@ -89,4 +91,8 @@ export async function fetchUsers() {
     })
     const usersData = await response.json();
     globalState.users = usersData.users;
+}
+
+export async function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }

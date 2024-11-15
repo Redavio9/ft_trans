@@ -300,7 +300,7 @@ export function homeSidebar() {
             <div class="profile">
                 <h2>Profile</h2>
                 <div class="image-cover">
-                        <img src="" alt="profile">
+                        <img src="${globalState.user.avatar}" alt="profile">
                         <div class="status">
                             <h4>${globalState.user.username}</h4>
                             <p>Level ${globalState.user.game_stats[0].level}</p>
