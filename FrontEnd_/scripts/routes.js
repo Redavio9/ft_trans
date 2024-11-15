@@ -106,7 +106,7 @@ export async function urlHandler() {
         case '/first-mode':
             site.innerHTML = await firstModeComponent();
             site.classList = 'site';
-            tournamentModesScript();
+            await tournamentModesScript();
             break;
         case '/second-mode':
             site.innerHTML = await secondModeComponent();

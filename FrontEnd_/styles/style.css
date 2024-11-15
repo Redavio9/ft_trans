@@ -2166,7 +2166,6 @@ body {
 }
 
 .player-score {
-    background-color: #3DBDA7;
     color: #1D1E22;
     padding: 2px 8px;
     border-radius: 5px;
@@ -2189,6 +2188,14 @@ body {
 
 .first-mode .bottom-leave-button:hover {
     background-color: #FF4949;
+}
+
+.player.winner {
+    background: #3ebda7;
+}
+
+.player.loser {
+    background: red;
 }
 
 /* account Setting style sheet */
