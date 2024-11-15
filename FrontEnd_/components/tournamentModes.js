@@ -30,17 +30,23 @@ function matchTemplate(match) {
         <div class="match in-progress">
             <div class="player winner">
                 <span class="player-name">${match.player1.username}</span>
-                <span class="player-score">${match.player1.score}</span>
+                ${scoreTemplate(match.player1.score)}
             </div>
             <div class="player">
                 <span class="player-name">${match.player2.username}</span>
-                <span class="player-score">${match.player2.score}</span>
+                ${scoreTemplate(match.player2.score)}
             </div>
             <div class="paddle paddle-left"></div>
             <div class="paddle paddle-right"></div>
             <div class="ball"></div>
         </div>
     `)
+}
+
+function scoreTemplate(score) {
+    if (score)
+        return (`<span class="player-score">${score}</span>`)
+    return (``)
 }
 
 function round1(){
@@ -151,4 +157,19 @@ export function tournamentModesScript() {
             copyToClipboard(tournamentId);
         })
     }
+
+    // run the tournament
+    function startTournament() {
+        const user = globalTournamentState.round1.match1.player1.username;
+
+        if (globalTournamentState.round1.match1.player1.score === null) {
+            console.log('game started');
+        }
+        // history.pushState(null, null, '/game');
+        // urlHandler();
+
+        
+    }
+
+    startTournament()
 }
