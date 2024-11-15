@@ -1,29 +1,12 @@
+import { globalTournamentState } from "./fetchData.js"
+import { handleMatchEnd } from "../components/tournamentModes.js"
+import { urlHandler } from "./routes.js"
+
 // select canvas 
 export function gameScriptAi() {
     const canvas = document.querySelector('#pong')
 
     const context = canvas.getContext('2d')
-
-    let gameStarted = false
-
-    let playerDir = 'right'
-
-    // open socket connection
-
-    // handle the player direction from the server
-    function handlePlayerDir(dir) {
-        playerDir = dir
-        console.log('Player dir: ', playerDir)
-    }
-
-    function updateGame(data) {
-        LeftPlayer = data.LeftPlayer
-        RightPlayer = data.RightPlayer
-        Ball = data.Ball
-        console.log('LeftPlayer: ', LeftPlayer)
-        console.log('RightPlayer: ', RightPlayer)
-        console.log('Ball: ', Ball)
-    }
 
     // define game constants
     // game
@@ -34,7 +17,6 @@ export function gameScriptAi() {
     let BALL_START_SPEED = 1
     let BALL_MAX_SPEED = 8
     let SPEED = .02
-    let BALL_RADIUS = 10
 
     // player 
     let PLAYER_COLOR = '#508C9B'
@@ -42,7 +24,7 @@ export function gameScriptAi() {
     let PLAYER_HEIGHT = 150
 
     // AI
-    let AI_LEVEL = 0.1
+    let AI_LEVEL = 0.01
 
     // Net
     let NET_SPACE = 5
@@ -243,11 +225,18 @@ export function gameScriptAi() {
     }
 
     // game over
-    function gameOver(winner) {
+    async function gameOver(winner) {
         FPS = 0;
-        console.log(`Game Over! ${winner} Wins!`);
         Ball.speed = 0;
         clearInterval(gameInterval);
+        if (globalTournamentState.name.length > 0) {
+            console.log('game over');
+            await handleMatchEnd(LeftPlayer.score, RightPlayer.score);
+            history.pushState(null, null, '/first-mode');
+            urlHandler();
+        }
+        console.log(`name is ${globalTournamentState.name}`);
+        console.log(`Game Over! ${winner} Wins!`);
     }
 
     // Helper function to check line-rectangle collision
