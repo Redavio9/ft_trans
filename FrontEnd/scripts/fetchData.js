@@ -12,7 +12,7 @@ export const globalState = {
 };
 
 export const globalTournamentState = {
-    name: 'Tournament',
+    name: null,
     isWinner: false,
     isContinue: true,
     vs: '',
@@ -43,11 +43,11 @@ export async function fetchProfile() {
 
     const userData = await response.json();
     globalState.user = userData.user;
-    globalTournamentState.round1.match1.player1.username = globalState.user.username;
-    globalState.requests = userData.user.friend_requests;
-    globalState.sendRequests = userData.user.sent_requests;
-    globalState.friends = userData.user.friends;
-    globalState.game = userData.user.game_stats;
+    globalTournamentState.round1.match1.player1.username = globalState.user?.username;
+    globalState.requests = userData.user?.friend_requests;
+    globalState.sendRequests = userData.user?.sent_requests;
+    globalState.friends = userData.user?.friends;
+    globalState.game = userData.user?.game_stats;
 
     if (!globalState.ws)
         globalState.ws = new WebSocket(`ws://127.0.0.1:8000/ws/realtimenotifications/${globalState.user.username}/`);

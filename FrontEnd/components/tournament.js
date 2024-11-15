@@ -134,6 +134,17 @@ export function tournamentScript() {
             })
         }
 
-        
+        if (tournamentName && tournamentName.value) 
+            globalTournamentState.name = tournamentName.value;
+        else 
+            globalTournamentState.name = "Ping Pong Tournament";
+
+        if (playerName && playerName.value)
+            globalTournamentState.round1.match1.player1.username = playerName.value;
+        else 
+            globalTournamentState.playerName = globalState.user.username;
+
+        history.pushState(null, null, '/first-mode');
+        urlHandler();
     })
 }
