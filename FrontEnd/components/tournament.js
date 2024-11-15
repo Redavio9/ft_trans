@@ -1,6 +1,7 @@
 import { urlHandler } from "../scripts/routes.js";
 import { globalState, fetchProfile } from "../scripts/fetchData.js";
 import { handleViewMessage } from "../scripts/generalMessage.js";
+import { globalTournamentState } from "../scripts/fetchData.js";
 
 export async function gameTournamentComponent() {
     if (!globalState.user) {
@@ -124,7 +125,15 @@ export function tournamentScript() {
     const tournamentName = document.querySelector('.tournament-component .create-tournament .tournamentName');
 
     launchTournament.addEventListener('click', async () => {
-        // lunch tournament locally and redirect to tournament page
+        if (!tournamentName?.value ) {
+            return handleViewMessage({
+                message: 'Please enter a tournament name',
+                title: 'Error',
+                type: 'error',
+                icon: 'fas fa-exclamation-circle',
+            })
+        }
+
         
     })
 }
