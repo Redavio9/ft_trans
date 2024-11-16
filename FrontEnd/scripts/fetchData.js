@@ -59,6 +59,8 @@ export async function fetchProfile() {
             handleFriendAccept(data.message.message.sender);
         else if (data.message.type === 'friend_decline')
             handleFriendDecline({title: 'Friend Request Declined', message: data.message.message.sender + ' has declined your friend request', icon: 'fas fa-user-minus', type: 'info'});
+        else if (data.message.type === 'play with')
+            handleFriendDecline({title: 'Game ⭕❌', message: `play with ${data.message.message.sender} TIC TAC TOE` , icon: 'fas fa-gamepad', type: 'info'});
         else if (data.message.type === 'online') {
             globalState.onlineUsers = data.message.users;
         }
