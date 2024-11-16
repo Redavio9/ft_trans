@@ -19,12 +19,13 @@ import { gameOnlineComponent, gameOnlineScript } from '../components/play.js';
 import { searchComponent, searchComponentEvents } from '../components/search.js';
 import { ticTacComponent } from '../components/ticTac.js';
 import { globalState } from './fetchData.js';
+import { resetPasswordComponent } from '../components/resetPassword.js';
 
 function loadingSpinner() {
     // check if page is singin page, if so, return
     const snniper = document.querySelector('.loading-container');
     const site = document.querySelector('.site');
-    if (globalState.onlineUsers || window.location.pathname === '/singin' || window.location.pathname === '/singup') {
+    if (globalState.onlineUsers || window.location.pathname === '/singin' || window.location.pathname === '/singup' || window.location.pathname === '/reset-password' || window.location.pathname === '/new-password') {
         if (snniper) {
             snniper.style.display = 'none';
             site.style.display = 'grid';
@@ -144,6 +145,16 @@ export async function urlHandler() {
 
         case '/tic-tac':
             site.innerHTML = await ticTacComponent();
+            site.classList = 'site ';
+            break;
+
+        case '/reset-password':
+            site.innerHTML = await resetPasswordComponent('reset-password');
+            site.classList = 'site ';
+            break;
+        
+        case '/new-password':
+            site.innerHTML = await resetPasswordComponent('new-password');
             site.classList = 'site ';
             break;
         
