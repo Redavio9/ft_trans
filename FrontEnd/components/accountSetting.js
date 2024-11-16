@@ -58,7 +58,7 @@ export function accountSettingContent() {
 
                 <div class="setting-item">
                     <label for="2fa">Two Factor Authentication</label>
-                    <input type="checkbox" id="2fa" name="2fa" value="2fa" ${globalState.user.two_fa ? 'checked' : ''}>
+                    <input type="checkbox" id="two_fa" name="2fa" value="2fa" ${globalState.user.two_fa ? 'checked' : ''}>
                 </div>
             </div>
             <button type="button" class="btn save-btn">Save Changes</button>
@@ -98,7 +98,6 @@ export async function accountSettingScript() {
     }
 
     // Save changes to user password
-    console.log(savePasswordBtn);
     if (savePasswordBtn) {
         savePasswordBtn.addEventListener('click', async () => {
             await changePasswordModal();
@@ -148,6 +147,7 @@ async function updateProfile() {
     const username = document.querySelector('#username');
     const email = document.querySelector('#email');
     const avatar = document.querySelector('.account-setting .profile-pic');
+    const twoFa = document.querySelector('#two_fa');
 
     const response = await fetch('http://127.0.0.1:8000/api/profile_updating/', {
         method: 'PUT',
@@ -160,7 +160,7 @@ async function updateProfile() {
             last_name: lastName?.value,
             username: username?.value,
             email: email?.value,
-            two_fa: false
+            two_fa: twoFa?.checked,
         })
     }).then(response => response.json());
     if (!response.error) {
