@@ -17,7 +17,7 @@ services:
       - monitoring
     restart: always
     depends_on:
-      - db
+      - postgres
       - grafana
       - redis
 
@@ -98,7 +98,7 @@ services:
     ports:
       - "9113:9113"
     depends_on:
-      - frontend
+      - frontEnd
     networks:
       - monitoring
       
