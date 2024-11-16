@@ -1,0 +1,13 @@
+groups:
+  - name: http-alerts
+    rules:
+      - alert: HighRequestRate 
+        expr: rate(http_requests_total[1m]) > 10
+        for: 1m  
+        labels:
+          severity: critical 
+        annotations:
+          summary: "Taux de requêtes HTTP élevé." 
+          description: >
+            Le taux moyen de requêtes HTTP a dépassé 10 requêtes par seconde
+            pendant au moins 1 minute. Vérifiez le trafic ou les anomalies.
