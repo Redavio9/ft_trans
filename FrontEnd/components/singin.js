@@ -36,6 +36,16 @@ export function SingInComponent() {
                   </div>
               </div>
           </div>
+            <div class="modal" style="display: block;">
+                <div class="two-fa-modal">
+                    <div class="two-fa-modal-content">
+                        <span class="close">×</span>
+                        <h2>Enter 2FA Code</h2>
+                        <input type="text" id="2faCode" placeholder="2FA Code">
+                        <button class="btn confirm-2fa">Confirm</button>
+                    </div>
+                </div>
+            </div>
       </div>
     `);
 }
@@ -43,6 +53,8 @@ export function SingInComponent() {
 export async function SingUpComponentScript() {
     const passwordEye = document.querySelector('.password-eye');
     const password = document.querySelector('#password');
+    const close = document.querySelector('.two-fa-modal .close');
+
     if (password) {
         password.addEventListener('paste', function (e) {
             e.preventDefault();
@@ -61,6 +73,12 @@ export async function SingUpComponentScript() {
                 password.type = 'password';
                 passwordEye.innerHTML = '<i class="fas fa-eye-slash"></i>';
             }
+        })
+    }
+
+    if (close) {
+        close.addEventListener('click', function () {
+            document.querySelector('.modal').style.display = 'none';
         })
     }
 

@@ -1522,6 +1522,70 @@ body {
     }
 }
 
+.two-fa-modal {
+    background-color: #2A2B30;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #3DBDA7;
+    width: 300px;
+    border-radius: 10px;
+    position: relative;
+}
+
+.two-fa-modal h2 {
+    color: #3DBDA7;
+    text-align: center;
+}
+
+.two-fa-modal .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all .5s ease-in-out;
+}
+
+.two-fa-modal .close:hover {
+    color: red;
+}
+
+.two-fa-modal input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #3DBDA7;
+    background-color: #2A2B30;
+    color: #fff;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    display: block;
+    margin: 20px auto;
+    outline: none;
+}
+
+.two-fa-modal input:focus {
+    border-color: #3DBDA7;
+    box-shadow: 0 0 10px 1px #3DBDA7;
+}
+
+.two-fa-modal button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    background-color: #3DBDA7;
+    color: #fff;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: block;
+    margin: 20px auto;
+}
+
 /* add password view eye icon to right of input */
 .form .form-inputs form .password span i {
     position: absolute;
