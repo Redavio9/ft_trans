@@ -55,6 +55,11 @@ export function accountSettingContent() {
                     <label for="email">Email</label>
                     <input type="email" id="email" name="email" value="${globalState.user.email}">
                 </div>
+
+                <div class="setting-item">
+                    <label for="2fa">Two Factor Authentication</label>
+                    <input type="checkbox" id="2fa" name="2fa" value="2fa" ${globalState.user.two_fa ? 'checked' : ''}>
+                </div>
             </div>
             <button type="button" class="btn save-btn">Save Changes</button>
             <button type="button" class="btn change-password-btn">Change Password</button>

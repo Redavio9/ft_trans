@@ -14,14 +14,14 @@ export async function firstModeComponent() {
             <h2>${globalTournamentState.name}</h2>
             <div class="tournament-info">
                 Tournament ID: <span id="tournamentId">PPM2023</span>
-                <button class="copy-button" onclick="copyTournamentId()">Copy ID</button>
+                <button class="copy-button">Copy ID</button>
             </div>
-            <div class="bracket" w-tid="11">
-                <div class="round" id="round1" w-tid="12">${round1()}</div>
-                <div class="round" id="round2" w-tid="53">${round2()}</div>
-                <div class="round" id="round3" w-tid="74">${round3()}</div>
+            <div class="bracket">
+                <div class="round" id="round1">${round1()}</div>
+                <div class="round" id="round2">${round2()}</div>
+                <div class="round" id="round3">${round3()}</div>
             </div>
-            <button class="bottom-leave-button" w-tid="86">Leave Tournament</button>
+            <button class="bottom-leave-button">Leave Tournament</button>
         </div>
     `)
 }
@@ -326,6 +326,9 @@ async function hnadleTournamentRound1(user, ai) {
         globalTournamentState.round3.match1.player2.status = 'winner';
     }
 
+    globalTournamentState.isContinue = false;
+    globalTournamentState.isWinner = false;
+    globalTournamentState.name = null;
 }
 
 function hnadleTournamentRound2(user, ai) {
@@ -386,6 +389,7 @@ function hnadleTournamentRound2(user, ai) {
 
     globalTournamentState.isContinue = false;
     globalTournamentState.isWinner = false;
+    globalTournamentState.name = null;
 }
 
 function hnadleTournamentRound3(user, ai) {
@@ -401,4 +405,5 @@ function hnadleTournamentRound3(user, ai) {
         globalTournamentState.round3.match1.player1.status = 'loser';
         globalTournamentState.round3.match1.player2.status = 'winner';
     }
+    globalTournamentState.name = null;
 }
