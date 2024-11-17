@@ -56,8 +56,8 @@ function getHeaderNotifications() {
                     </div>
                     <div class="notification-info">Level: ${r.sender.game_stats[0].level}</div>
                     <div class="notification-actions">
-                        <button class="btn btn-accept" key="${r.sender.username}">Accept</button>
-                        <button class="btn btn-decline" key="${r.sender.username}">Decline</button>
+                        <button class="btn button-accept" key="${r.sender.username}"><i key=${r.sender.username} class="fas fa-user-check"></i></button>
+                        <button class="btn button-decline" key="${r.sender.username}"><i key=${r.sender.username} class="fas fa-user-times"></i></button>
                     </div>
                 </div>
             </div>

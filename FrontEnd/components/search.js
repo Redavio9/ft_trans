@@ -205,7 +205,7 @@ async function handleSendRequest(e) {
         handleFriendDecline({title: 'Friend Request', message: response.error, type: 'error', icon: 'fas fa-exclamation-circle'})
 }
 
-async function handleAcceptRequest(e) {
+export async function handleAcceptRequest(e) {
     const username = e.target.getAttribute('key');
     const response = await fetch('http://127.0.0.1:8000/api/friend_operations/', {
         method: 'POST',

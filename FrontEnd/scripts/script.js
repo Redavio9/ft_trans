@@ -1,3 +1,5 @@
+import { handleAcceptRequest, handleDeclineRequest } from "../components/search.js";
+import { fetchProfile } from "./fetchData.js";
 import { urlHandler } from "./routes.js";
 // Game script
 
@@ -218,6 +220,26 @@ export function setUpEvent() {
                 history.pushState(null, null, `/search?query=${searchInput.value}`);
                 urlHandler();
             }
+        })
+    }
+
+    const acceptButton = document.querySelectorAll('.notification-actions .button-accept');
+    if (acceptButton) {
+        acceptButton.forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                await handleAcceptRequest(e);
+                await fetchProfile();
+            });
+        })
+    }
+
+    const declineButton = document.querySelectorAll('.notification-actions .button-decline');
+    if (declineButton) {
+        declineButton.forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                await handleDeclineRequest(e);
+                await fetchProfile();
+            });
         })
     }
 }
