@@ -1,5 +1,5 @@
-import { header, menu } from '../scripts/components.js'
-import { fetchProfile, globalState, fetchUsers } from '../scripts/fetchData.js';
+import { header, menu } from './home.js'
+import { fetchProfile, globalState } from '../scripts/fetchData.js';
 import { urlHandler } from '../scripts/routes.js';
 
 export async function friendsComponent() {

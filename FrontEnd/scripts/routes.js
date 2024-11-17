@@ -1,14 +1,10 @@
 import { setUpEvent } from './script.js';
-import { gameComponent } from './components.js';
+import { gameComponent } from '../components/game.js';
 import { gameStartingComponent, gameStartingComponentScript } from '../components/gameWaiting.js';
 import { gameTournamentComponent, tournamentScript } from '../components/tournament.js';
-import { gameAiComponent } from './components.js';
-import { gameScriptAi } from './game.js';
-import { gameSettingScript } from './game.js';
-import { gameSettingComponent } from './components.js';
-import { homeComponent, chartScript } from './components.js';
-import { SingUpComponent } from '../components/singup.js';
-import { singupScript } from '../components/singup.js';
+import { gameScriptAi, gameSettingScript } from './game.js';
+import { homeComponent, chartScript } from '../components/home.js';
+import { SingUpComponent, singupScript } from '../components/singup.js';
 import { SingInComponent, SingUpComponentScript } from '../components/singin.js';
 import { ChatComponent, chatScript } from '../components/chat.js';
 import { firstModeComponent, secondModeComponent, tournamentModesScript } from '../components/tournamentModes.js';

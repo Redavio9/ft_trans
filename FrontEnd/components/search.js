@@ -1,9 +1,8 @@
-import { header } from '../scripts/components.js'
-import { menu } from '../scripts/components.js'
+import { header, menu } from './home.js'
 import { fetchProfile, globalState, fetchUsers, sendRealTimeNotification } from '../scripts/fetchData.js';
 import { urlHandler } from '../scripts/routes.js';
 import { getButtons } from './profile.js';
-import { handleFriendDecline, handleViewMessage, showFriendRequest } from '../scripts/generalMessage.js';
+import { handleFriendDecline, handleViewMessage } from '../scripts/generalMessage.js';
 
 export async function searchComponent() {
     if (globalState.user === null) 

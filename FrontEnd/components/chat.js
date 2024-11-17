@@ -1,4 +1,4 @@
-import { header, homeComponent, menu } from "../scripts/components.js";
+import { header, menu } from "./home.js";
 import { urlHandler } from "../scripts/routes.js";
 import { handleViewMessage } from '../scripts/generalMessage.js';
 import { fetchProfile, globalState, sendRealTimeNotification } from '../scripts/fetchData.js';

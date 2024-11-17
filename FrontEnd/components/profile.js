@@ -1,4 +1,4 @@
-import { header, menu } from '../scripts/components.js'
+import { header, menu } from './home.js'
 import { 
     fetchProfile, 
     globalState,
