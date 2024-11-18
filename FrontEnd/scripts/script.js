@@ -78,11 +78,11 @@ export function setUpEvent() {
         })
     }
 
-    const gameSettingLink = document.querySelector('.game-setting-link');
+    const gameSettingLink = document.querySelector('.menu .profile-link');
     if (gameSettingLink) {
         gameSettingLink.addEventListener('click', function (e) {
             e.preventDefault();
-            history.pushState(null, null, '/game_setting');
+            history.pushState(null, null, '/profile');
             urlHandler();
         })
     }

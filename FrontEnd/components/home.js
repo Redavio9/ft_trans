@@ -80,9 +80,9 @@ export function menu() {
             <div class="menu-items">
                 <ul>
                     <li><a href="#" class="home"><i class="fas fa-home"></i></a></li>
+                    <li><a href="#" class="profile-link"><i class="fas fa-user"></i></a></li>
+                    <li class="active"><a href="#" class="game"><i class="fas fa-gamepad"></i></a></li>
                     <li><a href="#" class="friend-list-link"><i class="fas fa-users"></i></a></li>
-                    <li class="active"><a href="#" class="game"><i class="fas fa-play-circle"></i></a></li>
-                    <li><a href="#" class="game-setting-link"><i class="fas fa-sliders-h"></i></a></li>
                     <li><a href="#" class="account-setting-link"><i class="fas fa-cog"></i></a></li>
                 </ul>
             </div>
