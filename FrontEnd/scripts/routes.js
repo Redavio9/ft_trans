@@ -15,33 +15,14 @@ import { gameOnlineComponent, gameOnlineScript } from '../components/play.js';
 import { searchComponent, searchComponentEvents } from '../components/search.js';
 import { ticTacComponent } from '../components/ticTac.js';
 import { globalState } from './fetchData.js';
-import { resetPasswordComponent } from '../components/resetPassword.js';
-
-function loadingSpinner() {
-    // check if page is singin page, if so, return
-    const snniper = document.querySelector('.loading-container');
-    const site = document.querySelector('.site');
-    if (globalState.onlineUsers || window.location.pathname === '/singin' || window.location.pathname === '/singup' || window.location.pathname === '/reset-password' || window.location.pathname === '/new-password') {
-        if (snniper) {
-            snniper.style.display = 'none';
-            site.style.display = 'grid';
-        }
-    } else {
-        // // calback after 1s
-        // console.log(globalState.onlineUsers)
-        snniper.style.display = 'block';
-        site.style.display = 'none';        
-        setTimeout(loadingSpinner, 100);
-    }
-}
+import { resetPasswordComponent, resetPasswordScript } from '../components/resetPassword.js';
 
 export async function urlHandler() {
-    loadingSpinner();
     const routeName = window.location.pathname;
     const site = document.querySelector('.site');
     
     // check if user if logged in or not, if not redirect to login page
-    if (routeName !== '/singin' && routeName !== '/singup') {
+    if (routeName !== '/singin' && routeName !== '/singup' && routeName !== '/reset-password' && routeName !== '/new-password') {
         // check refresh_token if exitst in cookies
         if (document.cookie.indexOf('access_token' + '=') === -1) {
             history.pushState(null, null, '/singin');
@@ -147,6 +128,7 @@ export async function urlHandler() {
         case '/reset-password':
             site.innerHTML = await resetPasswordComponent('reset-password');
             site.classList = 'site ';
+            resetPasswordScript()
             break;
         
         case '/new-password':
