@@ -782,14 +782,6 @@ body {
     width: 100%;
 }
 
-.game-mode h2 {
-    text-align: center;
-    background: linear-gradient(to right, #8A51FF 0%, #533199 50%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
-
 .game-mode .models {
     display: flex;
     justify-content: space-evenly;
@@ -1903,7 +1895,7 @@ body {
     overflow: hidden;
 }
 
-.tournament-component h2 {
+.tournament-component h2, .game-mode h2 {      
     text-align: center;
     color: var(--primary-color);
     margin-bottom: 30px;

@@ -1,4 +1,3 @@
-/* media query, from 2000px to up */
 @media (min-width: 2000px) and (max-width: 5000px) {
     body .site {
         width: 2000px;
@@ -10,5 +9,8 @@
         grid-template-areas:
             "menu header-background header-background"
             "menu content sidebar"
+    }
+    body .game-mode .models .model {
+        height: 300px;
     }
 }
