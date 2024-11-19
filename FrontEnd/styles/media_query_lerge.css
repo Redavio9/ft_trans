@@ -1,0 +1,14 @@
+/* media query, from 2000px to up */
+@media (min-width: 2000px) and (max-width: 5000px) {
+    body .site {
+        width: 2000px;
+    }
+    body .gameComponent {
+        display: grid;
+        grid-template-columns: 100px auto 400px;
+        grid-template-rows: auto auto;
+        grid-template-areas:
+            "menu header-background header-background"
+            "menu content sidebar"
+    }
+}
