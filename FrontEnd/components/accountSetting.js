@@ -175,14 +175,14 @@ async function updateProfile() {
     }).then(response => response.json());
     if (!response.error) {
         handleViewMessage({
-            title: 'Success',
+            title: 'Profile Updated',
             message: response?.success,
             type: 'success',
             icon: 'fas fa-check-circle'
         });
     } else {
         handleViewMessage({
-            title: 'Error',
+            title: 'Profile Update Error',
             message: response?.error,
             type: 'error',
             icon: 'fas fa-exclamation-circle'
