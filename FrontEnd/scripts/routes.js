@@ -1,5 +1,5 @@
 import { setUpEvent } from './script.js';
-import { gameComponent } from '../components/game.js';
+import { gameComponent, gameAiComponent } from '../components/game.js';
 import { gameStartingComponent, gameStartingComponentScript } from '../components/gameWaiting.js';
 import { gameTournamentComponent, tournamentScript } from '../components/tournament.js';
 import { gameScriptAi, gameSettingScript } from './game.js';
@@ -14,7 +14,6 @@ import { profileComponent } from '../components/profile.js';
 import { gameOnlineComponent, gameOnlineScript } from '../components/play.js';
 import { searchComponent, searchComponentEvents } from '../components/search.js';
 import { ticTacComponent } from '../components/ticTac.js';
-import { globalState } from './fetchData.js';
 import { resetPasswordComponent, resetPasswordScript } from '../components/resetPassword.js';
 
 export async function urlHandler() {

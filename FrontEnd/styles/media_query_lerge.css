@@ -1,6 +1,6 @@
 @media (min-width: 2000px) and (max-width: 5000px) {
     body .site {
-        width: 2000px;
+        width: 1900px;
     }
     body .gameComponent {
         display: grid;
@@ -12,5 +12,13 @@
     }
     body .game-mode .models .model {
         height: 300px;
+    }
+    body .chat-layout {
+        display: grid;
+        grid-template-columns: 100px auto;
+        grid-template-rows: auto auto;
+        grid-template-areas:
+            "menu header-background"
+            "menu chat";
     }
 }
