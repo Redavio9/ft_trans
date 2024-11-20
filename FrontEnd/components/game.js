@@ -66,44 +66,25 @@ export function gameSidebar() {
         <div class="sidebar">
             <h2>Play With Friends</h2>
             <div class="friends">
-                <div class="friend">
-                    <img src="images/profile.png" alt="">
-                    <h4>Rida labbiz</h4>
-                    <a href="#">Play</a>
-                </div>
-
-                <div class="friend">
-                    <img src="images/profile.png" alt="">
-                    <h4>Rida labbiz</h4>
-                    <a href="#">Play</a>
-                </div>
-
-                <div class="friend">
-                    <img src="images/profile.png" alt="">
-                    <h4>Rida labbiz</h4>
-                    <a href="#">Play</a>
-                </div>
-
-                <div class="friend">
-                    <img src="images/profile.png" alt="">
-                    <h4>Rida labbiz</h4>
-                    <a href="#">Play</a>
-                </div>
-
-                <div class="friend">
-                    <img src="images/profile.png" alt="">
-                    <h4>Rida labbiz</h4>
-                    <a href="#">Play</a>
-                </div>
-
-                <div class="friend">
-                    <img src="images/profile.png" alt="">
-                    <h4>Rida labbiz</h4>
-                    <a href="#">Play</a>
-                </div>
+                ${friends()}
             </div>
         </div>
     `)
+}
+
+function friends() {
+    const innerHTML = globalState.friends.map(r => {
+        return (`
+            <div class="friend">
+                <img src="${r.friend.avatar}" alt="${r.friend.username}'s photo">
+                <h4>${r.friend.first_name} ${r.friend.last_name}</h4>
+                <a href="#" key="${r.friend.username}">Play</a>
+            </div>
+        `)
+    })
+    if (innerHTML.length === 0) 
+        return '<h4>No friends available</h4>';
+    return innerHTML.join('\n');
 }
 
 export async function gameAiComponent() {

@@ -25,42 +25,38 @@ export async function gameTournamentComponent() {
                     <p> Enter an existing battle or use an ID </p>
                 </div>
             </div>
-            <div class="create-tournament" id="createTournament" w-tid="15">
-                <h3 w-tid="16">Create New Tournament</h3>
-                <select id="playerCount" w-tid="17">
-                    <option value="4" w-tid="18">4 Players - Quick Clash</option>
-                    <option value="8" w-tid="19">8 Players - Epic Showdown</option>
-                </select>
-                <input type="text" class="tournamentName" placeholder="Give your tournament an epic name" w-tid="20">
-                <input type="text" class="playerName" placeholder="Enter unique name" w-tid="20">
+            <div class="create-tournament" id="createTournament">
+                <h3>Create New Tournament</h3>
+                <input type="text" class="tournamentName" placeholder="Give your tournament an epic name">
+                <input type="text" class="playerName" placeholder="Enter unique name">
                 <button>Launch Tournament</button>
             </div>
 
-            <div class="join-tournament" id="joinTournament" w-tid="22">
-                <h3 w-tid="23">Join Tournament</h3>
-                <input type="text" id="tournamentId" placeholder="Enter Tournament ID to join the fray" w-tid="24">
-                <button onclick="joinTournamentById()" w-tid="25">Join by ID</button>
+            <div class="join-tournament" id="joinTournament">
+                <h3>Join Tournament</h3>
+                <input type="text" id="tournamentId" placeholder="Enter Tournament ID to join the fray">
+                <button>Join by ID</button>
                 
-                <div class="tournament-list" id="tournamentList" w-tid="26" style="display: block;">
+                <div class="tournament-list" id="tournamentList" style="display: block;">
                     <div class="tournament-item" id="first-mode">
                         <span>Paddle Fury </span>
-                        <p>4/8</p>
-                        <button class="join-button" onclick="joinTournament('T001')">Enter Arena</button>
+                        <p>7/8</p>
+                        <button class="join-button">Enter Arena</button>
                     </div>
                     <div class="tournament-item" id="first-mode">
                         <span>Table Titans</span>
-                        <p>5/8</p>
-                        <button class="join-button" onclick="joinTournament('T002')">Enter Arena</button>
+                        <p>7/8</p>
+                        <button class="join-button">Enter Arena</button>
                     </div>
                     <div class="tournament-item" id="second-mode">
                         <span>Spin Masters</span>
-                        <p>3/4</p>
-                        <button class="join-button" onclick="joinTournament('T003')">Enter Arena</button>
+                        <p>7/8</p>
+                        <button class="join-button">Enter Arena</button>
                     </div>
                     <div class="tournament-item" id="first-mode">
                         <span>Ping Pong Legends</span>
-                        <p>6/8</p>
-                        <button class="join-button" onclick="joinTournament('T004')">Enter Arena</button>
+                        <p>7/8</p>
+                        <button class="join-button">Enter Arena</button>
                     </div>
                 </div>
             </div>
@@ -99,7 +95,7 @@ export function tournamentScript() {
         })
     }
 
-    const firstMode = document.querySelectorAll('.tournament-list #first-mode');
+    const firstMode = document.querySelectorAll('.tournament-list #first-mode button');
     if (firstMode) {
         firstMode.forEach(mode => {
             mode.addEventListener('click', function () {

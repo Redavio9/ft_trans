@@ -77,7 +77,6 @@ body {
     text-transform: uppercase;
     margin-bottom: 30px;
     background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
-    -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
@@ -256,7 +255,7 @@ body {
 .message .notification-icon { background: var(--message-gradient); }
 
 .notification-content {
-    flex-grow: 1;
+    overflow: hidden;
 }
 
 .notification-title {
@@ -657,6 +656,10 @@ body {
     margin-bottom: 10px;
     padding: 8px;
     transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    justify-content: space-between;
 }
 
 .no-notifications {
@@ -1036,11 +1039,9 @@ body {
 }
 
 .sidebar h2 {
-    background: linear-gradient(to right, #8A51FF 0%, #533199 50%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
     margin-bottom: 20px;
+    margin-top: 20px;
+    text-align: left !important;
 }
 
 .sidebar .friends {
@@ -1433,7 +1434,12 @@ body {
     padding: 5px 15px;
     margin-left: 10px;
     font-size: 12px;
-    right: 20px;
+    cursor: pointer;
+    color: #E9E9EA;
+    border-radius: 20px;
+    transition: all .5s ease-in-out;
+    float: right;
+    display: block;
 }
 
 .sidebar .friend-request .friend a.accept {
@@ -1895,7 +1901,7 @@ body {
     overflow: hidden;
 }
 
-.tournament-component h2, .game-mode h2 {      
+.tournament-component h2, .game-mode h2, .sidebar h2 {      
     text-align: center;
     color: var(--primary-color);
     margin-bottom: 30px;

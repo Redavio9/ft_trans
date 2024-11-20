@@ -2,6 +2,7 @@
     body .site {
         width: 1900px;
     }
+
     body .gameComponent {
         display: grid;
         grid-template-columns: 100px auto 400px;
@@ -10,9 +11,11 @@
             "menu header-background header-background"
             "menu content sidebar"
     }
+    
     body .game-mode .models .model {
         height: 300px;
     }
+
     body .chat-layout {
         display: grid;
         grid-template-columns: 100px auto;
@@ -20,5 +23,9 @@
         grid-template-areas:
             "menu header-background"
             "menu chat";
+    }
+    
+    body .achievement-grid {
+        grid-template-columns: repeat(auto-fill, minmax(3   50px, 1fr)) ;
     }
 }
