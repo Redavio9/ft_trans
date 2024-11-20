@@ -1,8 +1,10 @@
+import { joinTicTacToeMatch } from '../components/tictactoe/fetch.js' 
+import { urlHandler } from "../scripts/routes.js";
+
 class NotificationManager {
     constructor() {
         this.container = document.getElementById('generalMessage');
     }
-
     create(options) {
         const {
             type = 'info',
@@ -10,6 +12,7 @@ class NotificationManager {
             message,
             icon,
             actions = [],
+            key = null,
             duration = 5000
         } = options;
 
@@ -45,7 +48,18 @@ class NotificationManager {
         // Setup event listeners
         notification.querySelector('.notification-close').addEventListener('click', 
             () => this.remove(notification));
-
+        if (key){
+            notification.querySelector('#req_accepted').addEventListener('click', 
+                () => {
+                    this.gameRequestAccept(key)
+                    this.remove(notification)
+                });
+            notification.querySelector('#req_rejected').addEventListener('click', 
+                () => {
+                    this.gameRequesDecline()
+                    this.remove(notification)
+                });
+        }
         // Auto remove after duration
         setTimeout(() => this.remove(notification), duration);
 
@@ -58,7 +72,7 @@ class NotificationManager {
         return `
             <div class="notification-actions">
                 ${actions.map(action => `
-                    <button class="action-button ${action.type}" onclick="${action.onClick}">
+                    <button class="action-button ${action.type}" id="${action.id}">
                         ${action.text}
                     </button>
                 `).join('')}
@@ -74,6 +88,18 @@ class NotificationManager {
             }
         });
     }
+
+
+    gameRequestAccept(match_key){
+        console.log("gameRequestAccept", {match_key})
+        joinTicTacToeMatch(match_key)
+        history.pushState(null, null, `/tictactoe_board?match_key=${match_key}`);
+        urlHandler();
+    }
+    gameRequesDecline(){
+        alert("gameRequesDecline")
+    }
+
 }
 
 const notificationManager = new NotificationManager();
@@ -97,30 +123,29 @@ export function showLogoutNotification() {
     });
 }
 
-
-export function showGameRequest() {
+export function showGameRequest(match_key) {
     notificationManager.create({
         type: 'request',
         title: 'Game Challenge! 🎮',
         message: 'John wants to play Chess with you!',
         icon: 'fas fa-gamepad',
+        key: match_key,
         actions: [
             {
                 type: 'accept',
+                id: 'req_accepted',
                 text: 'Let\'s Play',
-                onClick: 'handleGameAccept()'
+                onClick: `gameRequestAccept()`
             },
             {
                 type: 'reject',
+                id: 'req_rejected',
                 text: 'Not Now',
                 onClick: 'handleGameDecline()'
             }
         ]
     });
 }
-
-
-
 
 
 export function showFriendRequest(user) {

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django_prometheus',
     'tournament',
     'django_extensions',
+    'tictactoe',
 ]
 
 REST_FRAMEWORK = {
