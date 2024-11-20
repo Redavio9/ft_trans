@@ -9,6 +9,7 @@ export const globalState = {
     game: null,
     ws: null,
     onlineUsers: null,
+    gamesResults: null,
 };
 
 export const globalTournamentState = {
@@ -99,4 +100,16 @@ export async function fetchUsers() {
 
 export async function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+export async function fetchGamesResults() {
+    const response = await fetch(`http://127.0.0.1:8000/api/user_games_history/`, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    }).then(response => response.json());
+    if (response?.message)
+        globalState.gamesResults = response.game_history;
 }

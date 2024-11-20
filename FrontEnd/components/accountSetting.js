@@ -146,38 +146,49 @@ async function updateProfile() {
     const lastName = document.querySelector('#lastName');
     const username = document.querySelector('#username');
     const email = document.querySelector('#email');
-    const avatar = document.querySelector('.account-setting .profile-pic');
     const twoFa = document.querySelector('#two_fa');
+    const avatar = document.querySelector('#setting-upload');
+
+    const formData = new FormData();
+    if (firstName?.value)
+        formData.append('first_name', firstName?.value);
+    if (lastName?.value)
+        formData.append('last_name', lastName?.value);
+    if (username?.value)
+        formData.append('username', username?.value);
+    if (email?.value)
+        formData.append('email', email?.value);
+    formData.append('two_fa', twoFa?.checked);
+    if (avatar?.files && avatar?.files[0]) {
+        const file = avatar?.files[0];
+        console.log(file.size);
+        formData.append('avatar', file);
+    }
 
     const response = await fetch('http://127.0.0.1:8000/api/profile_updating/', {
         method: 'PUT',
         credentials: 'include',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            first_name: firstName?.value,
-            last_name: lastName?.value,
-            username: username?.value,
-            email: email?.value,
-            two_fa: twoFa?.checked,
-        })
+        // headers: {
+        //     'Content-Type': 'application/json'
+        // },
+        body: formData
     }).then(response => response.json());
     if (!response.error) {
         handleViewMessage({
-            title: 'Success',
+            title: 'Profile Updated',
             message: response?.success,
             type: 'success',
             icon: 'fas fa-check-circle'
         });
     } else {
         handleViewMessage({
-            title: 'Error',
+            title: 'Profile Update Error',
             message: response?.error,
             type: 'error',
             icon: 'fas fa-exclamation-circle'
         });
     }
+    console.log(response);
 }
 
 async function changePasswordModal() {

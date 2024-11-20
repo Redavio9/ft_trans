@@ -184,37 +184,31 @@ export function homeSidebar() {
             </div>
 
             <h2>Friend Request</h2>
-            <div class="friend-request">
-                <div class="friend">
-                    <img src="images/profile.png" alt="">
-                    <h4>Rida labbiz</h4>
-                    <a href="#" class="accept">Accept</a>
-                    <a href="#" class="reject">Decline</a>
-                </div>
-
-                <div class="friend">
-                    <img src="images/profile.png" alt="">
-                    <h4>Rida labbiz</h4>
-                    <a href="#" class="accept">Accept</a>
-                    <a href="#" class="reject">Decline</a>
-                </div>
-
-                <div class="friend">
-                    <img src="images/profile.png" alt="">
-                    <h4>Rida labbiz</h4>
-                    <a href="#" class="accept">Accept</a>
-                    <a href="#" class="reject">Decline</a>
-                </div>
-
-                <div class="friend">
-                    <img src="images/profile.png" alt="">
-                    <h4>Rida labbiz</h4>
-                    <a href="#" class="accept">Accept</a>
-                    <a href="#" class="reject">Decline</a>
+            <div class="notifications-panel-header">
+                <div class="notification-list">
+                    ${getHeaderNotifications()}
                 </div>
             </div>
         </div>    
     `)
+}
+
+function friends() {
+    const innerHTML = globalState.requests.map(r => {
+        return (`
+            <div class="friend">
+                <img src="${r.sender.avatar}" alt="${r.sender.first_name} ${r.sender.last_name}">
+                <h4>${r.sender.first_name} ${r.sender.last_name}</h4>
+                <a href="#" class="accept">Accept</a>
+                <a href="#" class="reject">Decline</a>
+            </div>
+        `)
+    })
+
+    if (innerHTML.length === 0) 
+        return `No friend requests`;
+    return innerHTML.join('\n');
+
 }
 
 export function chartScript() {

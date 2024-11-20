@@ -107,6 +107,15 @@ function friendButton(user) {
 }
 
 export async function searchComponentEvents() {
+    // handle edit-profile-btn click
+    const editProfileBtn = document.querySelector('.edit-profile-btn');
+    if (editProfileBtn) {
+        editProfileBtn.addEventListener('click', async () => {
+            history.pushState(null, null, '/account_settings');
+            return urlHandler();
+        })
+    }
+
     // handle the send request button
     const friendRequestButtons = document.querySelectorAll('button.btn-request');
     friendRequestButtons.forEach(button => {

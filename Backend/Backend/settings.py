@@ -116,7 +116,7 @@ DATABASES = {
         'NAME': "djangodb",
         'USER': "solix",
         'PASSWORD': "1337",
-        'HOST': 'postgres',
+        'HOST': 'db',
         'PORT': '5432',
     }
 }

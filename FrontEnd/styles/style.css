@@ -1,3 +1,5 @@
+@import url('media_query_lerge.css');
+
 /* variables */
 :root {
     --background-color: #1D1E22;
@@ -75,7 +77,6 @@ body {
     text-transform: uppercase;
     margin-bottom: 30px;
     background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
-    -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
@@ -254,7 +255,7 @@ body {
 .message .notification-icon { background: var(--message-gradient); }
 
 .notification-content {
-    flex-grow: 1;
+    overflow: hidden;
 }
 
 .notification-title {
@@ -633,6 +634,16 @@ body {
     display: none;
 }
 
+.notifications-panel-header {
+    width: 100%;
+    background-color: #252525;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.notifications-panel-header .notification-content {
+    position: relative;
+}
+
 .notifications-panel h3 {
     margin-top: 0;
     padding: 15px;
@@ -654,6 +665,10 @@ body {
     margin-bottom: 10px;
     padding: 8px;
     transition: all 0.3s ease;
+}
+
+.header .notification-content {
+    position: relative;
 }
 
 .no-notifications {
@@ -698,11 +713,12 @@ body {
 }
 
 .notification-actions {
-    display: flex;
-    gap: 10px;
+    position: absolute;
+    right: 0;
+    top: 0;
 }
 
-.notification-item:hover {
+.notifications-panel .notification-item:hover {
     background-color: var(--background-color);
     border-left-color: #3DBDA7;
 }
@@ -777,14 +793,6 @@ body {
 
 .content .game-mode {
     width: 100%;
-}
-
-.game-mode h2 {
-    text-align: center;
-    background: linear-gradient(to right, #8A51FF 0%, #533199 50%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
 }
 
 .game-mode .models {
@@ -1041,11 +1049,9 @@ body {
 }
 
 .sidebar h2 {
-    background: linear-gradient(to right, #8A51FF 0%, #533199 50%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
     margin-bottom: 20px;
+    margin-top: 20px;
+    text-align: left !important;
 }
 
 .sidebar .friends {
@@ -1438,7 +1444,12 @@ body {
     padding: 5px 15px;
     margin-left: 10px;
     font-size: 12px;
-    right: 20px;
+    cursor: pointer;
+    color: #E9E9EA;
+    border-radius: 20px;
+    transition: all .5s ease-in-out;
+    float: right;
+    display: block;
 }
 
 .sidebar .friend-request .friend a.accept {
@@ -1900,7 +1911,7 @@ body {
     overflow: hidden;
 }
 
-.tournament-component h2 {
+.tournament-component h2, .game-mode h2, .sidebar h2 {      
     text-align: center;
     color: var(--primary-color);
     margin-bottom: 30px;
@@ -2610,7 +2621,7 @@ body {
     transition: all 0.3s ease;
 }
 
-.btn-accept {
+.btn-accept, .button-accept {
     background-color: #4CAF50;
     color: white;
 }
@@ -2624,7 +2635,7 @@ body {
     transition: all 0.3s ease;
 }
 
-.btn-remove, .btn-decline, .btn-decline-reverse, .btn-unfriend {
+.btn-remove, .btn-decline, .btn-decline-reverse, .btn-unfriend, .button-decline {
     background-color: #FF6B6B;
     color: white;
 }
