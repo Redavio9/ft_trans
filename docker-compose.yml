@@ -17,13 +17,13 @@ services:
       - monitoring
     restart: always
     depends_on:
-      - postgres
+      - db
       - grafana
       - redis
 
-  postgres:
+  db:
     image: postgres:latest
-    container_name: postgres
+    container_name: db
     environment:
       POSTGRES_DB: djangodb
       POSTGRES_USER: solix
@@ -128,7 +128,7 @@ services:
     networks:
       - monitoring
     depends_on:
-      - postgres
+      - db
       
   grafana:
     image: grafana/grafana:latest
