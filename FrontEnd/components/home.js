@@ -173,8 +173,10 @@ export function homeSidebar() {
             </div>
 
             <h2>Friend Request</h2>
-            <div class="friend-request">
-                ${friends()}
+            <div class="notifications-panel-header">
+                <div class="notification-list">
+                    ${getHeaderNotifications()}
+                </div>
             </div>
         </div>    
     `)
