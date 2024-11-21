@@ -129,6 +129,17 @@ export function homeContent() {
 
             <div class="charts-row">
                 <div class="chart-container">
+                    <canvas id="Pie" width="380" height="400"></canvas>
+                </div>
+            </div>
+            <div class="charts-row">
+                <div class="chart-container">
+                    <canvas id="LineChart" width="380" height="400"></canvas>
+                </div>
+            </div>
+
+            <div class="charts-row">
+                <div class="chart-container">
                     <canvas id="pieChart-tic-tac"></canvas>
                 </div>
             </div>
@@ -299,4 +310,192 @@ export function chartScript() {
             }
         }
     });
+}
+
+function drawText(ctx, text, x, y, options = {}) {
+    // Set default values for font size, color, and alignment
+    const fontSize = options.fontSize || '16px';
+    const fontFamily = options.fontFamily || 'Arial';
+    const color = options.color || '#000';
+    const align = options.align || 'center';
+    const baseline = options.baseline || 'middle';
+
+    // Apply the font style and color
+    ctx.font = `${fontSize} ${fontFamily}`;
+    ctx.fillStyle = color;
+    ctx.textAlign = align;
+    ctx.textBaseline = baseline;
+
+    // Draw the text on the canvas
+    ctx.fillText(text, x, y);
+}
+
+export function drawPieChartAnimated(data, canvasId) {
+    const canvas = document.getElementById(canvasId);
+    const ctx = canvas.getContext('2d');
+    const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'];
+    const x = canvas.width / 2;
+    const y = canvas.height / 2;
+    const radius = 150;
+    const total = data.reduce((sum, value) => sum + value, 0);    
+    let startAngle = 0;
+    let progress = 0;
+
+    drawText(ctx, 'Pie Chart', 0, 0, {
+        fontSize: '20px',
+        color: '#FFFFFF',
+        align: 'left',
+        baseline: 'top'
+    });
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas for animation
+        progress += 0.02;
+
+        startAngle = 0; // Reset start angle for each frame
+        data.forEach((value, index) => {
+            const sliceAngle = (value / total) * (2 * Math.PI);
+            const endAngle = startAngle + sliceAngle * Math.min(progress, 1);
+
+            // Draw pie slice
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.arc(x, y, radius, startAngle, endAngle);
+            ctx.closePath();
+
+            ctx.fillStyle = colors[index];
+            ctx.fill();
+
+            // Calculate midpoint angle for percentage text placement
+            const midAngle = startAngle + sliceAngle / 2;
+            const textX = x + (radius / 2) * Math.cos(midAngle); // Adjust to position inside slice
+            const textY = y + (radius / 2) * Math.sin(midAngle);
+
+            // Draw percentage text
+            const percentage = ((value / total) * 100).toFixed(1) + '%';
+            ctx.fillStyle = '#FFFFFF';
+            ctx.font = '16px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(percentage, textX, textY);
+
+            startAngle += sliceAngle; // Update start angle for next slice
+        });
+        const colorss = {
+            wins: '#4CAF50', // Green for wins
+            draws: '#FFC107', // Yellow for draws
+            losses: '#F44336' // Red for losses
+        };
+        const padding = 70;
+        // Draw legend
+        ctx.font = '14px Arial';
+        ctx.textAlign = 'left';
+        ctx.fillStyle = colorss.wins;
+        ctx.fillText("Wins", canvas.width - padding + 20, padding + 20);
+        ctx.fillStyle = colorss.draws;
+        ctx.fillText("Draws", canvas.width - padding + 20, padding + 40);
+        ctx.fillStyle = colorss.losses;
+        ctx.fillText("Losses", canvas.width - padding + 20, padding + 60);
+
+        if (progress < 1) {
+            requestAnimationFrame(animate);
+        }
+    }
+
+    requestAnimationFrame(animate);
+}
+
+
+
+export function drawLineChartAnimated(dataSets, labels, canvasId) {
+    const canvas = document.getElementById(canvasId);
+    const ctx = canvas.getContext('2d');
+    const padding = 70;
+    const chartWidth = canvas.width - padding * 2;
+    const chartHeight = canvas.height - padding * 2;
+
+    // Colors for each line
+    const colors = {
+        wins: '#4CAF50', // Green for wins
+        draws: '#FFC107', // Yellow for draws
+        losses: '#F44336' // Red for losses
+    };
+
+    const maxData = Math.max(...dataSets.wins, ...dataSets.draws, ...dataSets.losses);
+    const yStep = chartHeight / maxData;
+    const xStep = chartWidth / (dataSets.wins.length - 1);
+
+    let progress = 0;
+
+    function animate() {
+        progress += 0.02;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Draw axes
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.beginPath();
+        ctx.moveTo(padding, padding);
+        ctx.lineTo(padding, canvas.height - padding);
+        ctx.lineTo(canvas.width - padding, canvas.height - padding);
+        ctx.stroke();
+
+        // Draw y-axis labels
+        ctx.fillStyle = '#FFFFFF';
+        ctx.font = '12px Arial';
+        ctx.textAlign = 'right';
+        ctx.textBaseline = 'middle';
+        for (let i = 0; i <= maxData; i += Math.ceil(maxData / 5)) {
+            const y = canvas.height - padding - i * yStep;
+            ctx.fillText(i, padding - 10, y);
+            ctx.beginPath();
+            ctx.moveTo(padding, y);
+            ctx.lineTo(padding + 5, y);
+            ctx.stroke();
+        }
+
+        // Draw each line
+        Object.keys(dataSets).forEach((key) => {
+            ctx.strokeStyle = colors[key];
+            ctx.beginPath();
+
+            dataSets[key].forEach((value, index) => {
+                const x = padding + index * xStep;
+                const y = canvas.height - padding - value * yStep * progress;
+
+                if (index === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            });
+            ctx.stroke();
+        });
+
+        // Draw legend
+        ctx.font = '14px Arial';
+        ctx.textAlign = 'left';
+        ctx.fillStyle = colors.wins;
+        ctx.fillText("Wins", canvas.width - padding + 20, padding + 20);
+        ctx.fillStyle = colors.draws;
+        ctx.fillText("Draws", canvas.width - padding + 20, padding + 40);
+        ctx.fillStyle = colors.losses;
+        ctx.fillText("Losses", canvas.width - padding + 20, padding + 60);
+
+        if (progress < 1) {
+            requestAnimationFrame(animate);
+        }
+    }
+
+    requestAnimationFrame(animate);
+}
+
+export function drawCharts(){
+    let data = [0, 0, 0]
+    console.log(data.length)
+    if (data.length == 3 && data[0] == data[1] == data[2] == 0)
+        data[0] = data[1] = data[2] = 100
+    drawPieChartAnimated(data,'Pie');
+    drawLineChartAnimated({wins: [2, 5, 7, 10, 12, 19],
+        draws: [1, 2, 3, 4, 6, 8, 8],
+        losses: [3, 4, 6, 8, 9, 11, 18]}, ['Wins', 'Draws', 'Losses'], 'LineChart');
 }

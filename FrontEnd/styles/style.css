@@ -446,7 +446,6 @@ body {
     margin: 0 auto;
 }
 
-
 /* start header stylesheet */
 
 .header-background {
@@ -3140,4 +3139,34 @@ body {
     cursor: pointer;
     transition: .5s ease-in-out;
     text-align: center;
+}
+
+/* dashboard */
+
+#statistics {
+    margin: 10px;
+}
+#dashboard_Pie, #dashboard_LineChart {
+    /* margin: auto; */
+    /* background: rgb(0, 0, 0); */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    /* margin: 50px; */
+    /* margin: 10px; */
+}
+
+#container {
+    width: 1130px;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin: 20px;
+    /* display: flex;
+    justify-content: center; */
+}
+body , #container{
+    display: flex;
+    justify-content: center;
 }

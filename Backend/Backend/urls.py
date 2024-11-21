@@ -10,6 +10,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('API.urls')),
     path('chat/', include('Chat.urls')),
+    path('tictactoe/', include('tictactoe.urls')),
     path('metrics/', exports.ExportToDjangoView),
     path('tournament/', include('tournament.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

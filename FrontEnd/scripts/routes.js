@@ -3,7 +3,7 @@ import { gameComponent, gameAiComponent } from '../components/game.js';
 import { gameStartingComponent, gameStartingComponentScript } from '../components/gameWaiting.js';
 import { gameTournamentComponent, tournamentScript } from '../components/tournament.js';
 import { gameScriptAi, gameSettingScript } from './game.js';
-import { homeComponent, chartScript } from '../components/home.js';
+import { homeComponent, chartScript, drawCharts } from '../components/home.js';
 import { SingUpComponent, singupScript } from '../components/singup.js';
 import { SingInComponent, SingUpComponentScript } from '../components/singin.js';
 import { ChatComponent, chatScript } from '../components/chat.js';
@@ -13,8 +13,15 @@ import { friendsComponent, friendsScript } from '../components/friends.js';
 import { profileComponent } from '../components/profile.js';
 import { gameOnlineComponent, gameOnlineScript } from '../components/play.js';
 import { searchComponent, searchComponentEvents } from '../components/search.js';
+<<<<<<< HEAD
+=======
 import { ticTacComponent } from '../components/ticTac.js';
+>>>>>>> 641cc37338da6dc372db442dcb85d3f0c3f9e7b2
 import { resetPasswordComponent, resetPasswordScript } from '../components/resetPassword.js';
+import { ticTacToeComponent, ticTacToeBoard , ticTacToeDashboard } from '../components/tictactoe/tictactoe.js';
+import { socket_management_ } from '../components/tictactoe/board.js'
+import { tictactoe_getUser } from '../components/tictactoe/fetch.js'
+import { manageEvents } from '../components/tictactoe/events.js'
 
 export async function urlHandler() {
     const routeName = window.location.pathname;
@@ -35,11 +42,15 @@ export async function urlHandler() {
             site.innerHTML = await homeComponent();
             site.classList = 'site gameComponent';
             chartScript();
-            break;
+            // CHECK
+            drawCharts()
+            break ;
         case '/index.html':
             site.innerHTML = await homeComponent();
             site.classList = 'site gameComponent';
             chartScript();
+            // CHECK
+            drawCharts()
             break;
         case '/game':
             site.innerHTML = await gameComponent();
@@ -120,8 +131,24 @@ export async function urlHandler() {
             break;
 
         case '/tic-tac':
-            site.innerHTML = await ticTacComponent();
-            site.classList = 'site ';
+            site.innerHTML = await ticTacToeComponent();
+            site.classList = 'site';
+            manageEvents();
+            break;
+        case '/tictactoe_board':
+            site.innerHTML = await ticTacToeBoard();
+            // site.innerHTML = await tictactoeWaitingPly();
+            site.classList = 'site';
+            const user = await tictactoe_getUser()
+            console.log("user in routes.js : ", user)
+            socket_management_(user)
+            console.log("tictactoe_board")
+            break;
+        case '/dashboard':
+            site.innerHTML = await ticTacToeDashboard();
+            site.classList = 'site';
+            drawCharts()
+            console.log("dashboard")
             break;
 
         case '/reset-password':

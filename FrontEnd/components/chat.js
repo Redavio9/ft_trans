@@ -1,7 +1,7 @@
 import { header, menu } from "./home.js";
 import { urlHandler } from "../scripts/routes.js";
-import { handleViewMessage } from '../scripts/generalMessage.js';
 import { fetchProfile, globalState, sendRealTimeNotification } from '../scripts/fetchData.js';
+import { createTicTacToeMatch } from './tictactoe/fetch.js'
 
 const data = {
   Socket: null,
@@ -29,14 +29,14 @@ function sendLoginStatus(message, UserId) {
   }
 }
 
-
-function sendInvitation()
+async function sendInvitation()
 {
-    handleViewMessage({title: `Play TIC TAC TOE with ${data.friend.username}`, message: 'success', type: 'success', icon: 'fas fa-check-circle'})
-    sendRealTimeNotification('play with', {sender: globalState.user.username, receiver: data.friend.username});
+    const match_key = await createTicTacToeMatch()
+    console.log("match_key in sendInvitation : ", match_key)
+    history.pushState(null, null, `/tictactoe_board?match_key=${match_key}`);
+    urlHandler();
+    sendRealTimeNotification('game_request', {sender: globalState.user.username, receiver: data.friend.username, key: match_key});
 }
-
-
 
 function addMessage(message, sender) {
   console.log("dkheeeeeeeel");
