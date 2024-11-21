@@ -208,12 +208,13 @@ export async function tournamentModesScript() {
         history.pushState(null, null, '/first-mode');
         return urlHandler();
     });
-
+    console.log('tournamentModesScript start ' + globalTournamentState.isContinue)
     if (!globalTournamentState.isContinue)
         return ;
     await delay(5000);
     if (!globalTournamentState.isContinue)
         return ;
+    console.log('tournamentModesScript end ' + globalTournamentState.isContinue)
     await startTournament();
 }
 
@@ -232,7 +233,7 @@ function checkName(name) {
 async function startTournament() {
     if (!globalTournamentState.isContinue)
         return ;
-    if (globalTournamentState.round1.match1.player1.status === 'loser' || globalTournamentState.round1.match2.player1.status === 'loser' || globalTournamentState.round1.match3.player1.status === 'loser' || globalTournamentState.round1.match4.player1.status === 'loser') {
+    if (globalTournamentState.round1.match1.player1.status === 'loser' || globalTournamentState.round2.match1.player1.status === 'loser' || globalTournamentState.round3.match1.player1.status === 'loser') {
         resetTournament();
         return ;
     }
