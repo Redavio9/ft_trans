@@ -1,5 +1,5 @@
 import { urlHandler } from "../scripts/routes.js";
-import { globalState, fetchProfile, globalTournamentState, delay } from "../scripts/fetchData.js";
+import { globalState, fetchProfile, globalTournamentState, delay, resetTournament } from "../scripts/fetchData.js";
 import { handleViewMessage } from "../scripts/generalMessage.js";
 
 export async function firstModeComponent() {
@@ -9,9 +9,23 @@ export async function firstModeComponent() {
     if (globalState.user === null)
         return (`cant fetch user data`)
 
+    if (globalTournamentState.round1.match1.player1.username === '') {
+        return (`
+            <div class="modal" style="display: block;">
+                <div class="two-fa-modal ">
+                    <div class="two-fa-modal-content">
+                        <h2>Please chose a uniq name</h2>
+                        <input type="text" id="2faCode" class="tournament-name-input" placeholder="Name" value="${globalState.user.username}">
+                        <button class="btn confirm-2fa tournament">Confirm</button>
+                    </div>
+                </div>
+            </div>
+        `)
+    }
+
     return (`
         <div class="first-mode">
-            <h2>${globalTournamentState.name}</h2>
+            <h2>${globalTournamentState.name === null ? 'Ping Pong Tournament' : globalTournamentState.name}</h2>
             <div class="tournament-info">
                 Tournament ID: <span id="tournamentId">PPM2023</span>
                 <button class="copy-button">Copy ID</button>
@@ -21,7 +35,7 @@ export async function firstModeComponent() {
                 <div class="round" id="round2">${round2()}</div>
                 <div class="round" id="round3">${round3()}</div>
             </div>
-            <button class="bottom-leave-button">Leave Tournament</button>
+            <button class="bottom-leave-button">Go Back</button>
         </div>
     `)
 }
@@ -167,14 +181,61 @@ export async function tournamentModesScript() {
             copyToClipboard(tournamentId);
         })
     }
-    // run startTournament() function after 5 seconds
+
+    const confirmButton = document.querySelector('.two-fa-modal .confirm-2fa.tournament');
+    const inputField = document.querySelector('.two-fa-modal .tournament-name-input');
+    confirmButton?.addEventListener('click', () => {
+        if (!inputField?.value) {
+            return handleViewMessage({
+                message: 'Please enter a name',
+                title: 'Error',
+                type: 'error',
+                icon: 'fa fa-exclamation-circle'
+            })
+        }
+
+        if (checkName(inputField?.value)) {
+            return handleViewMessage({
+                message: 'This name is already taken',
+                title: 'Error',
+                type: 'error',
+                icon: 'fa fa-exclamation-circle'
+            })
+        }
+
+        globalTournamentState.isContinue = true;
+        globalTournamentState.round1.match1.player1.username = inputField?.value;
+        history.pushState(null, null, '/first-mode');
+        return urlHandler();
+    });
+
+    if (!globalTournamentState.isContinue)
+        return ;
     await delay(5000);
+    if (!globalTournamentState.isContinue)
+        return ;
     await startTournament();
+}
+
+function checkName(name) {
+    if (globalTournamentState.round1.match1.player1.username === name || globalTournamentState.round1.match1.player2.username === name)
+        return true;
+    if (globalTournamentState.round1.match2.player1.username === name || globalTournamentState.round1.match2.player2.username === name)
+        return true;
+    if (globalTournamentState.round1.match3.player1.username === name || globalTournamentState.round1.match3.player2.username === name)
+        return true;
+    if (globalTournamentState.round1.match4.player1.username === name || globalTournamentState.round1.match4.player2.username === name)
+        return true;
+    return false;
 }
 
 async function startTournament() {
     if (!globalTournamentState.isContinue)
         return ;
+    if (globalTournamentState.round1.match1.player1.status === 'loser' || globalTournamentState.round1.match2.player1.status === 'loser' || globalTournamentState.round1.match3.player1.status === 'loser' || globalTournamentState.round1.match4.player1.status === 'loser') {
+        resetTournament();
+        return ;
+    }
     if (globalTournamentState.isWinner) {
         handleViewMessage({
             message: 'You are the Winner',
@@ -182,6 +243,7 @@ async function startTournament() {
             type: 'success',
             icon: 'fa fa-trophy'
         })
+        resetTournament();
         await delay(5000);
         history.pushState(null, null, '/tournament');
         urlHandler();
@@ -193,6 +255,7 @@ async function startTournament() {
         type: 'info',
         icon: 'fa fa-info-circle'
     })
+
     await delay(5000);
     history.pushState(null, null, '/ai');
     urlHandler();

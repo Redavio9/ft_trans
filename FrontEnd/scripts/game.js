@@ -230,7 +230,6 @@ export function gameScriptAi() {
         Ball.speed = 0;
         clearInterval(gameInterval);
         if (globalTournamentState.name) {
-            console.log('game over');
             await handleMatchEnd(LeftPlayer.score, RightPlayer.score);
             history.pushState(null, null, '/first-mode');
             urlHandler();

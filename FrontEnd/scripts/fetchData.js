@@ -15,11 +15,11 @@ export const globalState = {
 export const globalTournamentState = {
     name: null,
     isWinner: false,
-    isContinue: true,
+    isContinue: false,
     vs: '',
     aiLevel: 0.08,
     round1: {
-        match1: {player1: {username: 'tmp', score: null, status: 'waiting'}, player2: {username: 'Bob', score: null, status: 'waiting'}},
+        match1: {player1: {username: '', score: null, status: 'waiting'}, player2: {username: 'Bob', score: null, status: 'waiting'}},
         match2: {player1: {username: 'Charlie', score: null, status: 'waiting'}, player2: {username: 'David', score: null, status: 'waiting'}},
         match3: {player1: {username: 'Eve', score: null, status: 'waiting'}, player2: {username: 'Frank', score: null, status: 'waiting'}},
         match4: {player1: {username: 'Grace', score: null, status: 'waiting'}, player2: {username: 'grave', score: null, status: 'waiting'}},
@@ -29,6 +29,27 @@ export const globalTournamentState = {
         match2: {player1: {username: 'wating...', score: null, status: 'waiting'}, player2: {username: 'wating...', score: null, status: 'waiting'}},
     },
     round3: {
+        match1: {player1: {username: 'wating...', score: null, status: 'waiting'}, player2: {username: 'wating...', score: null, status: 'waiting'}},
+    }
+}
+
+export function resetTournament() {
+    globalTournamentState.name = null,
+    globalTournamentState.isWinner = false,
+    globalTournamentState.isContinue = false,
+    globalTournamentState.vs = '',
+    globalTournamentState.aiLevel = 0.08,
+    globalTournamentState.round1 = {
+        match1: {player1: {username: '', score: null, status: 'waiting'}, player2: {username: 'Bob', score: null, status: 'waiting'}},
+        match2: {player1: {username: 'Charlie', score: null, status: 'waiting'}, player2: {username: 'David', score: null, status: 'waiting'}},
+        match3: {player1: {username: 'Eve', score: null, status: 'waiting'}, player2: {username: 'Frank', score: null, status: 'waiting'}},
+        match4: {player1: {username: 'Grace', score: null, status: 'waiting'}, player2: {username: 'grave', score: null, status: 'waiting'}},
+    }
+    globalTournamentState.round2 = {
+        match1: {player1: {username: 'wating...', score: null, status: 'waiting'}, player2: {username: 'wating...', score: null, status: 'waiting'}},
+        match2: {player1: {username: 'wating...', score: null, status: 'waiting'}, player2: {username: 'wating...', score: null, status: 'waiting'}},
+    }
+    globalTournamentState.round3 = {
         match1: {player1: {username: 'wating...', score: null, status: 'waiting'}, player2: {username: 'wating...', score: null, status: 'waiting'}},
     }
 }
@@ -44,7 +65,6 @@ export async function fetchProfile() {
 
     const userData = await response.json();
     globalState.user = userData.user;
-    globalTournamentState.round1.match1.player1.username = globalState.user?.username;
     globalState.requests = userData.user?.friend_requests;
     globalState.sendRequests = userData.user?.sent_requests;
     globalState.friends = userData.user?.friends;

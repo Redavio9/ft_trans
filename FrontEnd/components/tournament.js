@@ -98,22 +98,31 @@ export function tournamentScript() {
     const firstMode = document.querySelectorAll('.tournament-list #first-mode button');
     if (firstMode) {
         firstMode.forEach(mode => {
-            mode.addEventListener('click', function () {
+            mode.addEventListener('click', () => {
+                globalTournamentState.name = mode.parentElement.querySelector('span').textContent;
                 history.pushState(null, null, '/first-mode');
                 urlHandler();
             })
         })
     }
 
-    const secondMode = document.querySelectorAll('.tournament-list #second-mode');
-    if (secondMode) {
-        secondMode.forEach(mode => {
-            mode.addEventListener('click', function () {
-                history.pushState(null, null, '/second-mode');
-                urlHandler();
+    // join tournament by ID
+    const joinTournamentButton = document.querySelector('.tournament-component .join-tournament button');
+    const tournamentId = document.querySelector('.tournament-component .join-tournament #tournamentId');
+    joinTournamentButton?.addEventListener('click', async () => {
+        if (!tournamentId?.value) {
+            return handleViewMessage({
+                message: 'Please enter a tournament ID',
+                title: 'Error',
+                type: 'error',
+                icon: 'fas fa-exclamation-circle',
             })
-        })
-    }
+        }
+
+        globalTournamentState.name = "Ping Pong Tournament";
+        history.pushState(null, null, '/first-mode');
+        urlHandler();
+    })
 
     // get tournament name and username from input fields
     const launchTournament = document.querySelector('.tournament-component .create-tournament button');
@@ -139,7 +148,6 @@ export function tournamentScript() {
             globalTournamentState.round1.match1.player1.username = playerName.value;
         else 
             globalTournamentState.playerName = globalState.user.username;
-
         history.pushState(null, null, '/first-mode');
         urlHandler();
     })
