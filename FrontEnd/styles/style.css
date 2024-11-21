@@ -1759,7 +1759,8 @@ body {
     grid-template-areas: 
         "chat_friends chat_friends chat_friends chat_header chat_header chat_header chat_header chat_header chat_header chat_header chat_header"
         "chat_friends chat_friends chat_friends chat_messages chat_messages chat_messages chat_messages chat_messages chat_messages chat_messages chat_messages"
-        "chat_friends chat_friends chat_friends chat_send chat_send chat_send chat_send chat_send chat_send chat_send chat_send"
+        "chat_friends chat_friends chat_friends chat_send chat_send chat_send chat_send chat_send chat_send chat_send chat_send";
+    margin: 0 auto;
 }
 
 .chat-friends {
