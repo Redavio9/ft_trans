@@ -13,10 +13,6 @@ import { friendsComponent, friendsScript } from '../components/friends.js';
 import { profileComponent } from '../components/profile.js';
 import { gameOnlineComponent, gameOnlineScript } from '../components/play.js';
 import { searchComponent, searchComponentEvents } from '../components/search.js';
-<<<<<<< HEAD
-=======
-import { ticTacComponent } from '../components/ticTac.js';
->>>>>>> 641cc37338da6dc372db442dcb85d3f0c3f9e7b2
 import { resetPasswordComponent, resetPasswordScript } from '../components/resetPassword.js';
 import { ticTacToeComponent, ticTacToeBoard , ticTacToeDashboard } from '../components/tictactoe/tictactoe.js';
 import { socket_management_ } from '../components/tictactoe/board.js'
