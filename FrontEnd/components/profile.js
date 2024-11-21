@@ -109,6 +109,17 @@ function profileContent(user) {
 }
 
 export function getLastMatches(user) {
+    if (!globalState.gamesResults) {
+        return (`
+            <div class="match-history" w-tid="42">
+                <h2 w-tid="43" class="">Recent Matches</h2>
+                <div class="match-list" w-tid="44">
+                    <p>No match found.</p>
+                </div>
+            </div>
+        `)
+    }
+    
     const lastMatches = globalState.gamesResults.filter(game => {
         return (game.player_1 === user.username || game.player_2 === user.username)
     })
