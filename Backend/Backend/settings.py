@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'tournament',
     'django_extensions',
     'tictactoe',
-    'Game',
 ]
 
 REST_FRAMEWORK = {
