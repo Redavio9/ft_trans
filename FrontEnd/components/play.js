@@ -88,7 +88,7 @@ export async function gameOnlineScript() {
     }
 
     
-    const ws = new WebSocket('ws://127.0.0.1:8001/ws/play/' + data.roomName + '/');
+    const ws = new WebSocket('ws://127.0.0.1:8000/ws/play/' + data.roomName + '/');
     document.querySelector('.exit').addEventListener('click', () => {
         ws.close();
         history.pushState(null, null, '/game');
@@ -110,7 +110,6 @@ export async function gameOnlineScript() {
             gameStarted = true;
             startGame();
         } else if (message.type == 'send_message') {
-            console.log(message);
         } else if (message.type == 'reset_ball') {
             await resetBall(message)
         } else if (message.type == 'game_over') {
@@ -268,7 +267,6 @@ export async function gameOnlineScript() {
     // start game
     function startGame() {
         Ball.speed = BALL_START_SPEED
-        console.log(Ball)
         gameInterval = setInterval(game, 1000 / FPS)
     }
 }

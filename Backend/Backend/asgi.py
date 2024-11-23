@@ -23,6 +23,7 @@ from channels.auth import AuthMiddlewareStack
 from RealTimeNotifications import routing
 from tictactoe.routing import websocket_urlpatterns
 from Chat import chat_routing
+from Game import routing as game_routing
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Backend.settings')
 
@@ -32,7 +33,8 @@ application = ProtocolTypeRouter({
         URLRouter(
             chat_routing.websocket_urlpatterns +
             routing.websocket_urlpatterns +
-            websocket_urlpatterns
+            websocket_urlpatterns +
+            game_routing.websocket_urlpatterns
         )
     ),
 })

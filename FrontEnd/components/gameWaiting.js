@@ -52,7 +52,7 @@ export let user = null
 
 export function gameStartingComponentScript() {
     // start connection to the server
-    const ws = new WebSocket('ws://127.0.0.1:8001/ws/game/');
+    const ws = new WebSocket('ws://127.0.0.1:8000/ws/game/');
 
     ws.onopen = function () {}
 
