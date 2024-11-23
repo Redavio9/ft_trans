@@ -2,7 +2,7 @@ import { setUpEvent } from './script.js';
 import { gameComponent, gameAiComponent } from '../components/game.js';
 import { gameStartingComponent, gameStartingComponentScript } from '../components/gameWaiting.js';
 import { gameTournamentComponent, tournamentScript } from '../components/tournament.js';
-import { gameScriptAi, gameSettingScript } from './game.js';
+import { gameScriptAi } from './game.js';
 import { homeComponent, chartScript, drawCharts } from '../components/home.js';
 import { SingUpComponent, singupScript } from '../components/singup.js';
 import { SingInComponent, SingUpComponentScript } from '../components/singin.js';
@@ -117,7 +117,7 @@ export async function urlHandler() {
         case '/play':
             site.innerHTML = await gameOnlineComponent();
             site.classList = 'site';
-            gameOnlineScript();
+            await gameOnlineScript();
             break;
 
         case '/search':

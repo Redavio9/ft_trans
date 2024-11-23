@@ -16,14 +16,10 @@ export async function gameStartingComponent() {
     if (!globalState.user) {
         return (`cant fetch user data`)
     }
-    
-    const id = prompt('Enter your id');
-    const name = prompt('Enter your name');
-    const avatar = prompt('Enter your avatar id');
 
-    userInfo.id = id;
-    userInfo.name = name;
-    userInfo.avatar = `avatar${avatar}.webp`;
+    userInfo.id = globalState.user.id;
+    userInfo.name = globalState.user.username;
+    userInfo.avatar = globalState.user.avatar;
 
     return (`
         <div class="game-waiting-container">
@@ -31,7 +27,7 @@ export async function gameStartingComponent() {
                 <h1 w-tid="7">Ping Pong Match</h1>
                 <div class="players" w-tid="8">
                     <div class="player" w-tid="9">
-                        <img class="player-photo" src="../images/avatars/${userInfo.avatar}" alt="${userInfo.name}'s photo" width="120" height="120" w-tid="10" data-image_id="0" alt-rewritten="A warm portrait photograph of a smiling young man with short dark hair.">
+                        <img class="player-photo" src="${userInfo.avatar}" alt="${userInfo.name}'s photo" width="120" height="120" w-tid="10" data-image_id="0" alt-rewritten="A warm portrait photograph of a smiling young man with short dark hair.">
                         <div class="player-name" w-tid="11">${userInfo.name}</div>
                     </div>
                     <div class="vs" w-tid="12">VS</div>
@@ -56,7 +52,7 @@ export let user = null
 
 export function gameStartingComponentScript() {
     // start connection to the server
-    const ws = new WebSocket('ws://localhost:1212/ws/game/');
+    const ws = new WebSocket('ws://127.0.0.1:8001/ws/game/');
 
     ws.onopen = function () {}
 
@@ -98,7 +94,7 @@ export function gameStartingComponentScript() {
                     userInfo.otherPlayer = message.message.secondUser;
 
                 waitingMsg.innerHTML = 'Opponent found! Get ready to play!';
-                userImage.src = `../images/avatars/${userInfo.otherPlayer.avatar}`;
+                userImage.src = `${userInfo.otherPlayer.avatar}`;
                 userImage.style = "animation: fadeOut 1s ease-in-out;";
                 userName.innerHTML = userInfo.otherPlayer.name;
 

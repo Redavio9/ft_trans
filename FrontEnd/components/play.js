@@ -1,12 +1,12 @@
-import { userInfo, data } from "./gameWaiting.js"
+import { userInfo, data, user } from "./gameWaiting.js"
 import { urlHandler } from "../scripts/routes.js";
-import { globalState, fetchProfile } from "../scripts/fetchData.js";
+import { globalState, fetchProfile, delay } from "../scripts/fetchData.js";
 
 let Ball = {
     x: 950 / 2,
     y: 500 / 2,
     radius: 10,
-    speed: 1.00,
+    speed: 0.5,
     velocityX: 5,
     velocityY: 5,
     color: '#EEEEEE'
@@ -68,32 +68,38 @@ export async function gameOnlineComponent() {
             <div id="game-cover" style="display: none;"></div>
             <i class="fas fa-times"></i>
             <div class="player-field">
-                <img src="../images/avatars/${LeftUser.avatar}" alt="">
+                <img src="${LeftUser.avatar}" alt="">
                 <h4>${LeftUser.name}</h4>
             </div>
             <canvas id="pong" width="950px" height="500"></canvas>
             <div class="player-field">
-                <img src="../images/avatars/${RightUser.avatar}" alt="">
+                <img src="${RightUser.avatar}" alt="">
                 <h4>${RightUser.name}</h4>
             </div>
         </div>
     `);
 }
 
-export function gameOnlineScript() {
+export async function gameOnlineScript() {
     if (data.roomName == '' || userInfo.otherPlayer == null) {
-        history.pushState(null, null, '/game_starting');
+        history.pushState(null, null, '/game');
         urlHandler();
         return ;
     }
 
-    const ws = new WebSocket('ws://localhost:1212/ws/play/' + data.roomName + '/');
+    
+    const ws = new WebSocket('ws://127.0.0.1:8001/ws/play/' + data.roomName + '/');
+    document.querySelector('.exit').addEventListener('click', () => {
+        ws.close();
+        history.pushState(null, null, '/game');
+        urlHandler();
+    })
 
     let gameStarted = false
 
     ws.onopen = function () {}
 
-    ws.onmessage = function (event) {
+    ws.onmessage = async function (event) {
         const message = JSON.parse(event.data);
         if (message.type == 'game_update') {
             Ball = message.ball;
@@ -106,51 +112,43 @@ export function gameOnlineScript() {
         } else if (message.type == 'send_message') {
             console.log(message);
         } else if (message.type == 'reset_ball') {
-            resetBall(message)
+            await resetBall(message)
         } else if (message.type == 'game_over') {
             clearInterval(gameInterval);
             if (message.winner == userInfo.direction) {
                 document.querySelector('.game-over-popup').style.display = 'block';
-                createConfetti()
             } else {
                 document.querySelector('.game-over-popup').style.display = 'block';
                 document.querySelector('.emoji').innerText = '😢';
                 document.querySelector('h2').innerText = 'Defeat!';
                 document.querySelector('p').innerText = `Don't be disheartened! Every loss is a chance to learn and grow. Ready for another challenge?`;
             }
-            document.querySelector('.exit').addEventListener('click', () => {
-                history.pushState(null, null, '/game');
-                urlHandler();
-            })
-            document.querySelector('.new-match').addEventListener('click', () => {
-                Ball = {
-                    x: 950 / 2,
-                    y: 500 / 2,
-                    radius: 10,
-                    speed: 1.00,
-                    velocityX: 5,
-                    velocityY: 5,
-                    color: '#EEEEEE'
-                }
-                LeftPlayer = {
-                    x: 0,
-                    y: 500 / 2 - 150 / 2,
-                    width: 15,
-                    height: 150,
-                    color: 'red',
-                    score: 0,
-                }
-                RightPlayer = {
-                    x: 950 - 15,
-                    y: 500 / 2 - 150 / 2,
-                    width: 15,
-                    height: 150,
-                    color: 'red',
-                    score: 0,
-                }
-                history.pushState(null, null, '/game_starting');
-                urlHandler();
-            })
+            // intial the rightplayer and leftplayer and ball 
+            Ball = {
+                x: 950 / 2,
+                y: 500 / 2,
+                radius: 10,
+                speed: 0.5,
+                velocityX: 5,
+                velocityY: 5,
+                color: '#EEEEEE'
+            }
+            LeftPlayer = {
+                x: 0,
+                y: 500 / 2 - 150 / 2,
+                width: 15,
+                height: 150,
+                color: 'red',
+                score: 0,
+            }
+            RightPlayer = {
+                x: 950 - 15,
+                y: 500 / 2 - 150 / 2,
+                width: 15,
+                height: 150,
+                color: 'red',
+                score: 0,
+            }
         }
     }
 
@@ -162,7 +160,7 @@ export function gameOnlineScript() {
 
     // define game constants
     // game
-    let FPS = 100
+    let FPS = 60
 
     // ball
     let BALL_START_SPEED = 1
@@ -227,7 +225,7 @@ export function gameOnlineScript() {
 
     }
 
-    function resetBall(message) {
+    async function resetBall(message) {
         clearInterval(gameInterval);
         Ball = message.ball;
         LeftPlayer = message.leftPlayer;
@@ -238,8 +236,8 @@ export function gameOnlineScript() {
         Ball.velocityX = -Ball.velocityX;
         Ball.velocityY = -Ball.velocityY;
 
-        setTimeout(render, 100)
-        setTimeout(startGame, 3000);
+        render();
+        startGame()
     }
 
     canvas.addEventListener('mousemove', (e) => {
@@ -251,15 +249,7 @@ export function gameOnlineScript() {
         } else {
             RightPlayer.y = e.clientY - rect.top - RightPlayer.height / 2
         }
-    })
-
-    // move player using keyboard
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowUp' || e.key == 'w') {
-            LeftPlayer.y -= 30
-        } else if (e.key === 'ArrowDown' || e.key == 's') {
-            LeftPlayer.y += 30
-        }
+        render()
     })
 
     function game(){

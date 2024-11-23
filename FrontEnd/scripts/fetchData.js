@@ -68,7 +68,7 @@ export async function fetchProfile() {
     globalState.requests = userData.user?.friend_requests;
     globalState.sendRequests = userData.user?.sent_requests;
     globalState.friends = userData.user?.friends;
-    globalState.game = userData.user?.game_stats;
+    globalState.game = userData.user.game_stats;
 
     if (!globalState.ws)
         globalState.ws = new WebSocket(`ws://127.0.0.1:8000/ws/realtimenotifications/${globalState.user.username}/`);

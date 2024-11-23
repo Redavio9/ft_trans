@@ -1,5 +1,5 @@
 import { urlHandler } from "../scripts/routes.js";
-import { globalState, fetchProfile, globalTournamentState, delay, resetTournament } from "../scripts/fetchData.js";
+import { globalState, fetchProfile, globalTournamentState, delay, resetTournament, fetchGamesResults } from "../scripts/fetchData.js";
 import { handleViewMessage } from "../scripts/generalMessage.js";
 
 export async function firstModeComponent() {
@@ -245,9 +245,7 @@ async function startTournament() {
             icon: 'fa fa-trophy'
         })
         resetTournament();
-        await delay(5000);
-        history.pushState(null, null, '/tournament');
-        urlHandler();
+        await sendPlayerState('winner');
         return ;
     }
     handleViewMessage({
@@ -266,9 +264,9 @@ export async function handleMatchEnd(user, ai) {
     if (globalTournamentState.round1.match1.player1.score === null) {
         await hnadleTournamentRound1(user, ai)
     } else if (globalTournamentState.round2.match1.player1.score === null) {
-        hnadleTournamentRound2(user, ai)
+        await hnadleTournamentRound2(user, ai)
     } else if (globalTournamentState.round3.match1.player1.score === null) {
-        hnadleTournamentRound3(user, ai)
+        await hnadleTournamentRound3(user, ai)
     }
 }
 
@@ -345,6 +343,8 @@ async function hnadleTournamentRound1(user, ai) {
         return ;
     }
 
+    await sendPlayerState('loser');
+
     globalTournamentState.round2.match1.player1.score = Math.floor(Math.random() * 4);
     globalTournamentState.round2.match1.player2.score = Math.floor(Math.random() * 4);
     while (globalTournamentState.round2.match1.player1.score === globalTournamentState.round2.match1.player2.score) {
@@ -395,7 +395,7 @@ async function hnadleTournamentRound1(user, ai) {
     globalTournamentState.name = null;
 }
 
-function hnadleTournamentRound2(user, ai) {
+async function hnadleTournamentRound2(user, ai) {
     let isWinner = false;
 
     globalTournamentState.round2.match1.player1.score = user;
@@ -435,6 +435,8 @@ function hnadleTournamentRound2(user, ai) {
         return ;
     }
 
+    await sendPlayerState('loser');
+
     globalTournamentState.round3.match1.player1.score = Math.floor(Math.random() * 4);
     globalTournamentState.round3.match1.player2.score = Math.floor(Math.random() * 4);
     while (globalTournamentState.round3.match1.player1.score === globalTournamentState.round3.match1.player2.score) {
@@ -456,7 +458,7 @@ function hnadleTournamentRound2(user, ai) {
     globalTournamentState.name = null;
 }
 
-function hnadleTournamentRound3(user, ai) {
+async function hnadleTournamentRound3(user, ai) {
     globalTournamentState.round3.match1.player1.score = user;
     globalTournamentState.round3.match1.player2.score = ai;
     if (globalTournamentState.round3.match1.player1.score > globalTournamentState.round3.match1.player2.score) {
@@ -468,6 +470,32 @@ function hnadleTournamentRound3(user, ai) {
         globalTournamentState.isWinner = false;
         globalTournamentState.round3.match1.player1.status = 'loser';
         globalTournamentState.round3.match1.player2.status = 'winner';
+        await sendPlayerState('loser');
     }
     globalTournamentState.name = null;
+}
+
+async function sendPlayerState(type) {
+    let data = {}
+    if (type === 'winner') {
+        data = {
+            won_tournaments: globalState.game[0].won_tournaments + 1,
+            total_tournaments: globalState.game[0].total_tournaments + 1,
+        }
+    } else {
+        data = {
+            total_tournaments: globalState.game[0].total_tournaments + 1,
+        }
+    }
+    
+    console.log(globalState.game)
+    const response = await fetch(`http://127.0.0.1:8000/api/game_stats_updating/`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    }).then(response => response.json())
+    await fetchProfile();
 }
