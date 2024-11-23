@@ -95,6 +95,16 @@ export async function gameAiComponent() {
     }
 
     return (`
+        <div class="game-over-popup">
+            <div class="popup">
+                <div class="emoji">🏆</div>
+                <h2>Victory Achieved!</h2>
+                <p>Congratulations on your spectacular win! What's your next move?</p>
+                <div class="buttons">
+                    <button class="exit" >Exit</button>
+                </div>
+            </div>
+        </div>
         <div class="game-container">
             <div id="countdown">5</div>
             <div id="game-cover"></div>

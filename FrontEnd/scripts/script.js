@@ -18,7 +18,7 @@ export function setUpEvent() {
     if (classicLink) {
         classicLink.addEventListener('click', function (e) {
             e.preventDefault();
-            history.pushState(null, null, 'game_starting');
+            history.pushState(null, null, '/play');
             urlHandler();
         })
     }
