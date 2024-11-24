@@ -4,6 +4,11 @@ import { urlHandler } from "./routes.js"
 
 // select canvas 
 export function gameScriptAi() {
+    if (!globalTournamentState.name) {
+        history.pushState(null, null, '/tournament');
+        urlHandler();
+        return ;
+    }
     const canvas = document.querySelector('#pong')
 
     const context = canvas.getContext('2d')

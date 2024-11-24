@@ -286,8 +286,8 @@ async function hnadleTournamentRound1(user, ai) {
         globalTournamentState.round2.match1.player1.username = globalTournamentState.round1.match1.player2.username;
         globalTournamentState.isContinue = false;
         globalTournamentState.isWinner = false;
-        globalTournamentState.round1.match1.player1.status = 'winner';
-        globalTournamentState.round1.match1.player2.status = 'loser';
+        globalTournamentState.round1.match1.player1.status = 'loser';
+        globalTournamentState.round1.match1.player2.status = 'winner';
     }
 
     globalTournamentState.round1.match2.player1.score = Math.floor(Math.random() * 4);
@@ -314,7 +314,7 @@ async function hnadleTournamentRound1(user, ai) {
     if (globalTournamentState.round1.match3.player1.score > globalTournamentState.round1.match3.player2.score) {
         globalTournamentState.round2.match2.player1.username = globalTournamentState.round1.match3.player1.username;
         globalTournamentState.round1.match3.player1.status = 'winner';
-        globalTournamentState.round1.match3.player2.status = 'winner';
+        globalTournamentState.round1.match3.player2.status = 'loser';
     }
     else {
         globalTournamentState.round2.match2.player1.username = globalTournamentState.round1.match3.player2.username;
@@ -488,7 +488,6 @@ async function sendPlayerState(type) {
         }
     }
     
-    console.log(globalState.game)
     const response = await fetch(`http://127.0.0.1:8000/api/game_stats_updating/`, {
         method: 'POST',
         credentials: 'include',

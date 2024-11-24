@@ -28,7 +28,6 @@ export async function gameTournamentComponent() {
             <div class="create-tournament" id="createTournament">
                 <h3>Create New Tournament</h3>
                 <input type="text" class="tournamentName" placeholder="Give your tournament an epic name">
-                <input type="text" class="playerName" placeholder="Enter unique name">
                 <button>Launch Tournament</button>
             </div>
 
@@ -126,7 +125,6 @@ export function tournamentScript() {
 
     // get tournament name and username from input fields
     const launchTournament = document.querySelector('.tournament-component .create-tournament button');
-    const playerName = document.querySelector('.tournament-component .create-tournament .playerName');
     const tournamentName = document.querySelector('.tournament-component .create-tournament .tournamentName');
 
     launchTournament.addEventListener('click', async () => {
@@ -143,11 +141,6 @@ export function tournamentScript() {
             globalTournamentState.name = tournamentName.value;
         else 
             globalTournamentState.name = "Ping Pong Tournament";
-
-        if (playerName && playerName.value)
-            globalTournamentState.round1.match1.player1.username = playerName.value;
-        else 
-            globalTournamentState.playerName = globalState.user.username;
         history.pushState(null, null, '/first-mode');
         urlHandler();
     })
