@@ -23,9 +23,11 @@ class UserInfo(AbstractUser):
         verbose_name = 'UserInfo'
         verbose_name_plural = 'UserInfo'
     
-    USERNAME_FIELD = 'username'
+    USERNAME_FIELD = "username"
     read_only_fields = ['id']
-    
+    constraints = [
+        models.UniqueConstraint(fields = ['email'], name = 'unique_email')
+    ]
     def __str__(self) -> str:
         return f"{self.username}"
     

@@ -20,6 +20,7 @@ from ..models import UserInfo
 from ..utils import Utils
 import requests
 import jwt
+from django.http import HttpResponseRedirect
 
 
 class RegistrationView(APIView):
@@ -46,18 +47,18 @@ class RegistrationView(APIView):
 
 		token = Utils.create_one_time_jwt(serializer.instance)
 
-		# current_site = get_current_site(request).domain
-		# relative_link = reverse('email_verification')
-		# absurl = f'http://{current_site}{relative_link}?token={str(token)}'
-		# email_body = f'Hi {serializer.instance.username},\n\nPlease use the link below to verify your email address:\n{absurl}'
-		# data = {
-		# 	'domain': absurl,
-		# 	'subject': 'Verify your email',
-		# 	'email': serializer.instance.email,
-		# 	'body': email_body
-		# }
+		current_site = get_current_site(request).domain
+		relative_link = reverse('email_verification')
+		absurl = f'http://{current_site}{relative_link}?token={str(token)}'
+		email_body = f'Hi {serializer.instance.username},\n\nPlease use the link below to verify your email address:\n{absurl}'
+		data = {
+			'domain': absurl,
+			'subject': 'Verify your email',
+			'email': serializer.instance.email,
+			'body': email_body
+		}
 
-		# Utils.send_verification_email(data)
+		Utils.send_verification_email(data)
 
 		return Response ({
 			'success': 'User registered successfully, check your email for verification',
@@ -128,16 +129,14 @@ class Authentication42View(APIView):
 			ugs = UserGameStats.objects.create(user_id = serializer.instance)
 			ugs.save()
 
-			response = Response({
-				'success': 'User registered successfully',
-				'user': serializer.data,
-			},
-			status=status.HTTP_201_CREATED)
+			response = HttpResponseRedirect('https://127.0.0.1:8008/')
 
 			__jwt = Utils.create_jwt_for_user(serializer.instance)
 
-			response.set_cookie(settings.ACCESS_TOKEN, __jwt['access_token'], httponly=False)
-			response.set_cookie(settings.REFRESH_TOKEN, __jwt['refresh_token'], httponly=True)
+			# response.redirec('https://127.0.0.1:8008/')
+			response.set_cookie(settings.ACCESS_TOKEN, __jwt['access_token'], httponly=False, secure=True, samesite='None')
+			response.set_cookie(settings.REFRESH_TOKEN, __jwt['refresh_token'], httponly=True, secure=True, samesite='None')
+			
 
 			return response
 
@@ -150,16 +149,12 @@ class Authentication42View(APIView):
 				},
 				status=status.HTTP_400_BAD_REQUEST)
 			
-			response = Response({
-				'success': 'Login successful',
-				'user': GetBasicUserInfoSerializer(user, context = {'request': request}).data
-			},
-			status=status.HTTP_200_OK)
+			response = HttpResponseRedirect('https://127.0.0.1:8008/')
 
 			__jwt = Utils.create_jwt_for_user(user)
 
-			response.set_cookie(settings.ACCESS_TOKEN, __jwt['access_token'], httponly=False)
-			response.set_cookie(settings.REFRESH_TOKEN, __jwt['refresh_token'], httponly=True)
+			response.set_cookie(settings.ACCESS_TOKEN, __jwt['access_token'], httponly=False, secure=True, samesite='None')
+			response.set_cookie(settings.REFRESH_TOKEN, __jwt['refresh_token'], httponly=True, secure=True, samesite='None')
 
 			return response
 
@@ -215,11 +210,11 @@ class LoginConfirmationView(APIView):
 			},
 			status=status.HTTP_401_UNAUTHORIZED)
 		
-		# if not user.is_verified:
-		# 	return Response({
-		# 		'error': 'User is not verified, check your email',
-		# 	},
-		# 	status=status.HTTP_401_UNAUTHORIZED)
+		if not user.is_verified:
+			return Response({
+				'error': 'User is not verified, check your email',
+			},
+			status=status.HTTP_401_UNAUTHORIZED)
 		
 		if not user.two_fa:
 			response = Response({
