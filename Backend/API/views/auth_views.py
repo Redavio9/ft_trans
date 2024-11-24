@@ -230,8 +230,8 @@ class LoginConfirmationView(APIView):
 
 			__jwt = Utils.create_jwt_for_user(user)
 
-			response.set_cookie(settings.ACCESS_TOKEN, __jwt[settings.ACCESS_TOKEN], httponly=False)
-			response.set_cookie(settings.REFRESH_TOKEN, __jwt[settings.REFRESH_TOKEN], httponly=True)
+			response.set_cookie(settings.ACCESS_TOKEN, __jwt[settings.ACCESS_TOKEN], httponly=False, secure=True, samesite='None')
+			response.set_cookie(settings.REFRESH_TOKEN, __jwt[settings.REFRESH_TOKEN], httponly=True, secure=True, samesite='None')
 
 			return response
 		
