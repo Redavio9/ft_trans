@@ -64,11 +64,19 @@ export async function fetchProfile() {
     });
 
     const userData = await response.json();
-    globalState.user = userData.user;
+    console.log(userData);
+    if (userData?.code === 'token_not_valid') {
+        // if true then remove access_token and refresh_token from Cookies
+        document.cookie = 'access_token' + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        document.cookie = 'refresh_token' + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        history.pushState(null, '', '/sining');
+    }
+
+    globalState.user = userData?.user;
     globalState.requests = userData.user?.friend_requests;
     globalState.sendRequests = userData.user?.sent_requests;
     globalState.friends = userData.user?.friends;
-    globalState.game = userData.user.game_stats;
+    globalState.game = userData.user?.game_stats;
 
     if (!globalState.ws)
         globalState.ws = new WebSocket(`ws://127.0.0.1:8000/ws/realtimenotifications/${globalState.user.username}/`);
