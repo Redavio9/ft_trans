@@ -93,6 +93,7 @@ class ProfileUpdatingSerializer(serializers.ModelSerializer):
 		instance.email = validated_data.get('email', instance.email)
 		instance.username = validated_data.get('username', instance.username)
 		instance.two_fa = validated_data.get('two_fa', instance.two_fa)
+		instance.avatar = validated_data.get('avatar', instance.avatar)
 
 		instance.save()
 

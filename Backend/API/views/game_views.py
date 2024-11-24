@@ -60,7 +60,7 @@ class GameStatsView(APIView):
         except UserGameStats.DoesNotExist:
             return Response({
                 'message': 'No game stats found'
-            }, status = status.HTTP_404_NOT_FOUND)
+            }, status = status.HTTP_200_OK)
 
         serializer = GameStatsSerializer(stats)
         return Response({
@@ -85,7 +85,7 @@ class UserGameHistoryView(APIView):
         except GameResults.DoesNotExist:
             return Response({
                 'message': 'No game history found'
-            }, status = status.HTTP_404_NOT_FOUND)
+            }, status = status.HTTP_200_OK)
 
         serializer = UserGameHistorySerializer(game_history, many = True)
         return Response({
