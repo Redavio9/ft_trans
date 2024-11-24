@@ -11,7 +11,7 @@ import { firstModeComponent, secondModeComponent, tournamentModesScript } from '
 import { accountSettingComponent, accountSettingScript } from '../components/accountSetting.js';
 import { friendsComponent, friendsScript } from '../components/friends.js';
 import { profileComponent } from '../components/profile.js';
-import { classicGame } from '../components/play.js';
+import { classicGame, classicGameComponent } from '../components/play.js';
 import { searchComponent, searchComponentEvents } from '../components/search.js';
 import { resetPasswordComponent, resetPasswordScript } from '../components/resetPassword.js';
 import { ticTacToeComponent, ticTacToeBoard , ticTacToeDashboard } from '../components/tictactoe/tictactoe.js';
@@ -115,7 +115,7 @@ export async function urlHandler() {
             break;
 
         case '/play':
-            site.innerHTML = await gameAiComponent();
+            site.innerHTML = await classicGameComponent();
             site.classList = 'site';
             await classicGame();
             break;

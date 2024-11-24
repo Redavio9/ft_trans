@@ -1,9 +1,82 @@
+import { globalState, fetchProfile } from "../scripts/fetchData.js";
+import { handleViewMessage } from "../scripts/generalMessage.js";
 import { urlHandler } from "../scripts/routes.js";
 
+const data = {
+    user: null,
+    otherUser: {name: null, avatar: null}
+}
+
+export async function classicGameComponent() {
+    await fetchProfile();
+
+    if (!globalState.user) {
+        return (`cant fetch data`);
+    }
+
+    if (data.otherUser.name === null) {
+        return (`
+            <div class="modal" style="display: block;">
+                <div class="two-fa-modal ">
+                    <div class="two-fa-modal-content">
+                        <h2>Who want play with you ?</h2>
+                        <input type="text" id="2faCode" class="tournament-name-input" placeholder="Name">
+                        <button class="btn confirm-2fa tournament">Confirm</button>
+                    </div>
+                </div>
+            </div>
+        `)
+    }
+
+    return (`
+        <div class="game-over-popup">
+            <div class="popup">
+                <div class="emoji">🏆</div>
+                <h2>Victory Achieved!</h2>
+                <p>Congratulations on your spectacular win! What's your next move?</p>
+                <div class="buttons">
+                    <button class="exit" >Exit</button>
+                </div>
+            </div>
+        </div>
+        <div class="game-container">
+            <div id="countdown">5</div>
+            <div id="game-cover"></div>
+            <i class="fas fa-times"></i>
+            <div class="player-field">
+                <img src="${globalState.user.avatar}" alt="${globalState.user.username}'s photo">
+                <h4>${globalState.user.username}</h4>
+            </div>
+            <canvas id="pong" width="950px" height="500"></canvas>
+            <div class="player-field">
+                <img src="${data.otherUser.avatar}" alt="${data.otherUser.name}">
+                <h4>${data.otherUser.name}</h4>
+            </div>
+        </div>
+    `)
+}
 
 export async function classicGame() {
+    if (data.otherUser.name === null) {
+        const confirm2fa = document.querySelector('.confirm-2fa');
+        confirm2fa?.addEventListener('click', async () => {
+            const name = document.getElementById('2faCode').value;
+            if (name === globalState.user.username) {
+                handleViewMessage({
+                    type: 'error',
+                    message: 'Name cannot be same as your name',
+                    title: 'Error',
+                    icon: 'fas fa-exclamation-triangle'
+                })
+                return ;
+            }
+            data.otherUser.name = name;
+            await urlHandler();
+        })
+        return ;
+    }
+
     const closeGame = document.querySelector('.exit');
-    console.log(closeGame);
     closeGame?.addEventListener('click', () => {
         history.pushState(null, null, '/game');
         urlHandler();
@@ -146,7 +219,7 @@ export async function classicGame() {
     })
 
 
-    function update() {
+    async function update() {
         // Calculate the new position
         let newX = Ball.x + Ball.velocityX * Ball.speed;
         let newY = Ball.y + Ball.velocityY * Ball.speed;
@@ -192,6 +265,7 @@ export async function classicGame() {
             if (RightPlayer.score == WINNING_SCORE - 1) {
                 RightPlayer.score++;
                 gameOver('Right Player');
+                await saveGameResult(LeftPlayer.score, RightPlayer.score);
                 return ;
             }
             RightPlayer.score++;
@@ -200,6 +274,7 @@ export async function classicGame() {
             if (LeftPlayer.score == WINNING_SCORE - 1) {
                 LeftPlayer.score++;
                 gameOver('Left Player');
+                await saveGameResult(LeftPlayer.score, RightPlayer.score);
                 return ;
             }
             LeftPlayer.score++;
@@ -215,7 +290,7 @@ export async function classicGame() {
         document.querySelector('.game-over-popup').style.display = 'block';
         document.querySelector('.emoji').innerText = '🎉';
         document.querySelector('h2').innerText = 'Match over!';
-        document.querySelector('p').innerText = `${winner} wins!`;
+        document.querySelector('p').innerText = `${winner === 'Right Player' ? data.otherUser.name : globalState.user.username} wins!`;
     }
 
     // Helper function to check line-rectangle collision
@@ -247,8 +322,8 @@ export async function classicGame() {
         return false;
     }
 
-    function game(){
-        update()
+    async function game(){
+        await update()
         render()
     }
 
@@ -296,4 +371,22 @@ export async function classicGame() {
 
     coolCountdown(startGame, 5);
 
+}
+
+async function saveGameResult(score1, score2) {
+    const message = {
+        Player_1: globalState.user.username,
+        Player_2: data.otherUser.name,
+        score_1: score1,
+        score_2: score2
+    }
+    const response = await fetch('http://127.0.0.1:8000/api/game_recording/', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(message)
+    }).then(response => response.json())
+    console.log(response);
 }
