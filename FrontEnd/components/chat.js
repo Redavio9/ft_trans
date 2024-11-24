@@ -2,6 +2,7 @@ import { header, menu } from "./home.js";
 import { urlHandler } from "../scripts/routes.js";
 import { fetchProfile, globalState, sendRealTimeNotification } from '../scripts/fetchData.js';
 import { createTicTacToeMatch } from './tictactoe/fetch.js'
+import { handleUnfriend } from './search.js'
 
 const data = {
   Socket: null,
@@ -100,9 +101,6 @@ export function chatContent() {
     }
     data.friend = data.friend.friend;
   }
-  console.log("++++");
-  console.log(data.friend);
-  console.log("++++");
   return `
         <div class="chat">
             ${chatProfile()}
@@ -148,6 +146,9 @@ function chatFriend() {
 
 function chatProfile() {
   if (!data.friend) return ``;
+  const unFriendButton = {innerHtml: `<i key=${data.friend.username} class="fas fa-user-minus"></i>`, class: 'btn btn-unfriend', key: data.friend.username};
+  const playButton = {innerHtml: `<i key=${data.friend.username} class="fas fa-gamepad"></i>`, class: 'btn btn-play', key: data.friend.username};
+  const viewButton = {innerHtml: `<i key=${data.friend.username} class="fas fa-eye"></i>`, class: 'btn btn-view', key: data.friend.username};
 
   return `
         <div class="chat-header" style="
@@ -158,27 +159,11 @@ function chatProfile() {
                 <img src="${data.friend.avatar}" alt="friend">
                 <p>${data.friend.username}</p>
             </div>
-
-            <button id="invite-button" class ="invite-button" style="
-            font-Family: monospace;
-            background: linear-gradient(90deg, hsla(162, 100%, 50%, 1) 0%, hsla(197, 61%, 83%, 1) 100%);
-            color: #0f6b92;
-            border: none;
-            padding: 2px 15px;
-            border-radius: 50px;
-            cursor: pointer;
-            margin-left: auto;
-            margin-right: 10px;
-            display: flex;
-            align-content: center;
-            justify-content: center;
-            align-items: center;
-            flex-direction: row-reverse;
-                ">
-                <img src="./images/tic-tac-toe.png" alt="Tic-Tac-Toe Icon" style="width: 30px; height: 30px; margin-left: 5px;">
-                Invite To Play
-            </button>
-
+            <div class="chat-buttons" >
+                <button id="invite-button" class="btn btn-play" key="${data.friend.username}"><i key="${data.friend.username}" class="fas fa-gamepad"></i></button>
+                <button class="btn btn-unfriend" key="${data.friend.username}"><i key="${data.friend.username}" class="fas fa-user-minus"></i></button>
+                <button class="btn btn-view" key="${data.friend.username}"><i key="${data.friend.username}" class="fas fa-eye"></i></button>
+            </div>
         </div>
     `;
 }
@@ -212,8 +197,24 @@ function chatInput() {
 }
 
 export async function chatScript() {
-  const friends = document.querySelectorAll(".chat-friend");
+  const viewProfileButtons = document.querySelectorAll('.chat button.btn-view');
+  viewProfileButtons?.forEach(button => {
+      button.addEventListener('click', async (e) => {
+          const username = e.target.getAttribute('key');
+          history.pushState(null, null, `/profile?username=${username}`);
+          urlHandler();
+      })
+  })
 
+  const unfriendButton = document.querySelectorAll('.chat button.btn-unfriend');
+  unfriendButton?.forEach(button => {
+      button.addEventListener('click', async (e) => {
+          await handleUnfriend(e);
+          await fetchProfile();
+      })
+  })
+
+  const friends = document.querySelectorAll(".chat-friend");
   if (friends) {
     friends.forEach((f) => {
       f.addEventListener("click", async () => {

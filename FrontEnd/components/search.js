@@ -308,7 +308,7 @@ async function handleDeclineReverseRequest(e) {
 }
 
 // still problem here response is always success even if the user is remoeved from the friend list aready 
-async function handleUnfriend(e) {
+export async function handleUnfriend(e) {
     const username = e.target.getAttribute('key');
     const response = await fetch('http://127.0.0.1:8000/api/friend_operations/', {
         method: 'POST',
