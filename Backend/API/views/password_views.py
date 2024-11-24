@@ -25,7 +25,7 @@ class PasswordUpdatingView(APIView):
 			serializer.is_valid(raise_exception=True)
 		except serializers.ValidationError as e:
 			return Response({
-				'error': e.detail,
+				'error': e.detail[Utils.retrieve_key_from_serializer_error(e)],
 			},
 			status=status.HTTP_400_BAD_REQUEST)
 
@@ -150,7 +150,7 @@ class PasswordConfirmationView(APIView):
 			serializer.is_valid(raise_exception=True)
 		except serializers.ValidationError as e:
 			return Response({
-				'error': e.detail,
+				'error': e.detail[Utils.retrieve_key_from_serializer_error(e)],
 			},
 			status=status.HTTP_400_BAD_REQUEST)
 

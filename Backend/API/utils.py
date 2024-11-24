@@ -125,3 +125,10 @@ class Utils:
         This method returns the current time.
         """
         return timezone.now()
+
+    @staticmethod
+    def retrieve_key_from_serializer_error(e: ValidationError) -> str:
+        """
+        This method retrieves the key from a serializer error.
+        """
+        return list(e.detail.keys())[0]
