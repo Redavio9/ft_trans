@@ -3,7 +3,6 @@ import { urlHandler } from "../../scripts/routes.js";
 
 function redirectToGameBoard(roomName)
 {
-    console.log("roomName 1337 : " , { roomName }); // Log room name for debugging
     history.pushState(null, null, `/tictactoe_board?match_key=${roomName}`);
     urlHandler();
 }
@@ -13,7 +12,6 @@ export function createMatchEvent(){
         event.preventDefault();
         
         const match_key = await createTicTacToeMatch();
-        console.log({match_key})
         if (match_key)
             redirectToGameBoard(match_key)
     });
@@ -26,7 +24,6 @@ export function playGameFrHome_(){
             event.preventDefault();
             
             const match_key = await createTicTacToeMatch();
-            console.log({match_key})
             if (match_key)
                 redirectToGameBoard(match_key)
         });
@@ -37,7 +34,6 @@ export function joinMatchEvent(){
     document.getElementById('joinMatchForm').addEventListener('submit', async function(event) {
         event.preventDefault();
         const joinKey = document.getElementById('joinKey').value;
-        console.log({joinKey})
         const match_key = await joinTicTacToeMatch(joinKey);
         if (match_key)
             redirectToGameBoard(match_key)

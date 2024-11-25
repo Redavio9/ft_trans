@@ -32,23 +32,16 @@ export async function gameContent() {
                         <a href="#">Play now</a>
                     </div>
 
-                    <div class="model center ai">
-                        <h4>AI - MODE</h4>
-                        <p>chose AI level and have fun.</p>
-                        <img src="images/ai-mode.png" alt="" />
+                    <div class="model tic-tac center">
+                        <h4>Tic Tac</h4>
+                        <p>Enjoy with online Tic Tac game.</p>
+                        <img src="images/tournament .png" alt="" />
                         <a href="#">Play now</a>
                     </div>
 
                     <div class="model tournament">
                         <h4>TOURNAMENT</h4>
                         <p>Create tournament, or join to tournament.</p>
-                        <img src="images/tournament .png" alt="" />
-                        <a href="#">Play now</a>
-                    </div>
-
-                    <div class="model tic-tac ai">
-                        <h4>Tic Tac</h4>
-                        <p>Enjoy with online Tic Tac game.</p>
                         <img src="images/tournament .png" alt="" />
                         <a href="#">Play now</a>
                     </div>

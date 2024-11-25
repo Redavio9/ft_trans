@@ -33,14 +33,12 @@ function sendLoginStatus(message, UserId) {
 async function sendInvitation()
 {
     const match_key = await createTicTacToeMatch()
-    console.log("match_key in sendInvitation : ", match_key)
     history.pushState(null, null, `/tictactoe_board?match_key=${match_key}`);
     urlHandler();
     sendRealTimeNotification('game_request', {sender: globalState.user.username, receiver: data.friend.username, key: match_key});
 }
 
 function addMessage(message, sender) {
-  console.log("dkheeeeeeeel");
   const chatBox = document.getElementById("chat-content");
 
   // Créer un nouvel élément div pour le message
@@ -226,16 +224,12 @@ export async function chatScript() {
 
   if (data.Socket) data.Socket.close();
   if (data.friend) {
-    console.log("hna***********");
     if (data.Socket) data.Socket.close();
     data.Socket = null;
     if (globalState.user.id > data.friend.id)
       data.Roomname = data.friend.id + "" + globalState.user.id;
     else data.Roomname = globalState.user.id + "" + data.friend.id;
-    console.log("---->", data.Roomname);
     initializeWebSocket();
-  } else {
-    console.log("no firned enter yet ================");
   }
 
   const login = (e) => {
@@ -272,8 +266,6 @@ async function getConversation() {
 
     const messages = await response.json();
 
-    console.log("Fetched messages:", messages);
-
     // Access the nested 'messages' array
     const messageList = messages.messages;
 
@@ -292,7 +284,6 @@ async function getConversation() {
 }
 
 async function createConversation() {
-  console.log("---> " + data.Roomname);
   try {
     const response = await fetch("http://127.0.0.1:8000/chat/conversations/", {
       method: "POST",
@@ -305,32 +296,26 @@ async function createConversation() {
         participants: [globalState.user.id, data.friend.id],
       }),
     });
-    console.log(response);
     if (!response.ok) {
       throw new Error("Failed to create conversation.");
     }
 
     const newConversation = await response.json();
-    console.log("Conversation created successfully:", newConversation);
 
     getConversation();
   } catch (error) {
     console.error("Error creating conversation:", error);
   }
-  console.log("redas");
 }
 
 async function initializeWebSocket() {
   if (data.Socket) {
     if (data.Socket.readyState === WebSocket.OPEN) {
-      console.log("WebSocket is already connected.");
       data.Socket.close();
       return;
     } else if (data.Socket.readyState === WebSocket.CONNECTING) {
-      console.log("WebSocket is connecting. Please wait.");
       return; // Stil connecting
     } else if (data.Socket.readyState === WebSocket.CLOSING) {
-      console.log("WebSocket is closing. Attempting to reconnect...");
     }
   }
 
@@ -342,21 +327,16 @@ async function initializeWebSocket() {
   await createConversation();
 
   data.Socket.onopen = function () {
-    console.log("WebSocket connection established.", data.Roomname);
   };
 
   data.Socket.onmessage = async function (event) {
-    console.log("Received message:");
     const res = JSON.parse(event.data);
 
     const senderType = res.id === globalState.user.id ? "user" : "other";
     addMessage(res.message, senderType);
 
-    console.log("another", res.id);
     if (res.id === globalState.user.id) {
       if (res.message) {
-        console.log("1 - ------->", res);
-        console.log("2 - -------->" + res.id);
         try {
           const response = await fetch("http://127.0.0.1:8000/chat/messages/", {
             method: "POST",
@@ -377,7 +357,6 @@ async function initializeWebSocket() {
           }
 
           const responseData = await response.json();
-          console.log("Message and conversation saved:", responseData);
         } catch (error) {
           console.error("Error saving message:", error);
         }
@@ -390,7 +369,6 @@ async function initializeWebSocket() {
   };
 
   data.Socket.onclose = function () {
-    console.log("WebSocket connection closed.");
   };
 }
 

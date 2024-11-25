@@ -23,7 +23,6 @@ export async function createTicTacToeMatch(){
 }
 
 export async function joinTicTacToeMatch(joinKey){
-    console.log("1337 Here !!!", {joinKey})
     try{
         const response = await fetch(`http://127.0.0.1:8000/tictactoe/join-match/${joinKey}/`, {
             method: 'POST',

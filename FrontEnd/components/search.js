@@ -86,7 +86,6 @@ function friendButton(user) {
             isFriend = true;
     })
 
-    console.log(globalState.user.sent_requests)
 
     globalState.user.sent_requests.forEach(r => {
         if (r.receiver.username === user.username)

@@ -65,7 +65,6 @@ export async function fetchProfile() {
     });
 
     const userData = await response.json();
-    console.log(userData);
     if (userData?.code === 'token_not_valid') {
         // if true then remove access_token and refresh_token from Cookies
         document.cookie = 'access_token' + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
@@ -93,7 +92,6 @@ export async function fetchProfile() {
         else if (data.message.type === 'friend_decline')
             handleFriendDecline({title: 'Friend Request Declined', message: data.message.message.sender + ' has declined your friend request', icon: 'fas fa-user-minus', type: 'info'});
         else if (data.message.type === 'game_request'){
-            console.log("realtimenotifications => match_key : ", data.message.message.key)
             showGameRequest(data.message.message.key)
         }
         else if (data.message.type === 'online') {

@@ -26,7 +26,6 @@ export async function resetPasswordComponent(type) {
         // get token argument from url
         const url = new URL(window.location.href);
         const token = url.searchParams.get('token');
-        console.log('token = ' + token);
         const response = await fetch('http://127.0.0.1:8000/api/password_verification/', {
             method: 'POST',
             headers: {
@@ -115,7 +114,6 @@ export async function newPasswordReset() {
     const rePassword = document.getElementById('re-password');
     const resetPasswordSubmit = document.querySelector('.resetPasswordSubmit');
     resetPasswordSubmit?.addEventListener('click', async (e) => {
-        console.log('submit');
         e.preventDefault();
         const passwordValue = password?.value;
         const rePasswordValue = rePassword?.value;
@@ -140,7 +138,6 @@ export async function newPasswordReset() {
                     re_new_password: rePasswordValue,
                     token: token
                 }
-                console.log(data);
                 const response = await fetch('http://127.0.0.1:8000/api/password_confirmation/', {
                     method: 'POST',
                     headers: {
@@ -148,7 +145,6 @@ export async function newPasswordReset() {
                     },
                     body: JSON.stringify(data)
                 }).then(response => response.json());
-                console.log(response);
                 if (response.error) {
                     handleViewMessage({
                         type: 'error',
@@ -156,7 +152,6 @@ export async function newPasswordReset() {
                         title: 'Reset Password Error',
                         icon: 'fas fa-exclamation-circle'
                     })
-                    console.log(response);
                 } else {
                     handleViewMessage({
                         type: 'success',

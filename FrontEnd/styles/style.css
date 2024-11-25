@@ -862,11 +862,11 @@ body {
     border: 1px solid #85E9FF;
 }
 
-.game-mode .models .ai {
+.game-mode .models .tic-tac {
     box-shadow: 0px 0px 5px 1px rgba(119,119,204,1);
 }
 
-.game-mode .models .ai::before {
+.game-mode .models .tic-tac::before {
     content: '';
     position: absolute;
     width: 100%;
@@ -879,7 +879,7 @@ body {
     z-index: -1;
 }
 
-.game-mode .models .ai a {
+.game-mode .models .tic-tac a {
     border: 1px solid #FF007A;
 }
 
@@ -3297,4 +3297,7 @@ p.forgetPassword:hover {
 
 .logo img {
     width: 100px;
+}
+.chart-container {
+    max-width: 400px;
 }

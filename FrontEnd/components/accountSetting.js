@@ -154,7 +154,6 @@ async function updateProfile() {
     formData.append('two_fa', twoFa?.checked);
     if (avatar?.files && avatar?.files[0]) {
         const file = avatar?.files[0];
-        console.log(file.size);
         formData.append('avatar', file);
     }
 
@@ -181,7 +180,6 @@ async function updateProfile() {
             icon: 'fas fa-exclamation-circle'
         });
     }
-    console.log(response);
 }
 
 async function changePasswordModal() {

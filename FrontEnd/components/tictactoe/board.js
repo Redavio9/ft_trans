@@ -48,7 +48,6 @@ function socket_onmessage(){
         if (gameState.gameStatus == "start"){
             gameState.move = data.move;
             gameState.player = data.player;
-            console.log("data.match : ", data.match)
             if (data.error !== undefined)
                 removeMove(data.error, data.move)
             else {
@@ -62,20 +61,16 @@ function socket_onmessage(){
                 applyMoveToBoard()
             }
         }
-        else
-            console.log(gameState.gameStatus)
     };
 }
 
 function socket_onopen(){
     gameState.socket.onopen = async function() {
-        console.log("WebSocket connection opened.");
     };
 }
 
 function socket_onclose(){
     gameState.socket.onclose = function(event) {
-        console.log("WebSocket connection closed:", event);
     };
 }
 
@@ -105,7 +100,6 @@ function updateBoard(board) {
 }
 
 async function setup_board(){
-    console.log("gameState.key : ", gameState.key)
     const response = await fetch(`http://127.0.0.1:8000/tictactoe/match/${gameState.key}/`, {
             method: 'GET',
             credentials: 'include',
@@ -113,7 +107,6 @@ async function setup_board(){
                 'Content-Type': 'application/json',
             }
     })
-    console.log("gameState.key : ", gameState.key)
     // Uncaught (in promise) Error: Network response was not ok
     if (!response.ok) {
         // Log the error response text
@@ -124,7 +117,6 @@ async function setup_board(){
     const data = await response.json()
     gameState.player = data.current_turn;
     gameState.board  = data.board;
-    console.log("data.board : ", data.board)
     // if (data.winner)
     updateBoard(data.board)
 }
@@ -133,9 +125,7 @@ function socket_initializtions(){
     const urlParams = new URLSearchParams(window.location.search);
     const roomName = urlParams.get('match_key');
     gameState.key = roomName;
-    console.log({roomName})
     if (roomName == null){
-        console.log("****", {roomName})
         gameState.isError = true
         gameState.errorMessage = "roomName is null"
     } else {
@@ -156,7 +146,6 @@ function sendMessageToServer(user_id){
     document.querySelectorAll('button').forEach(button => {
         button.addEventListener('click', () => {
             const move = button.id;
-            console.log("move 1337: ", move)
             let ids = "012345678";
             if (ids[move]){
                 if (!button.disabled) {  // Only allow move if button isn't already clicked
@@ -187,8 +176,5 @@ export function socket_management_(user_id){
         socket_onclose()
         socket_onerror()
         sendMessageToServer(user_id)
-    }
-    else{
-        console.log("Error : " , gameState.errorMessage)
     }
 }

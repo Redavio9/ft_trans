@@ -110,7 +110,6 @@ export async function SingUpComponentScript() {
             });
 
             response.json().then(data => {
-                console.log(data)
                 if (data.error) {
                     handleViewMessage({
                         status: 'error',

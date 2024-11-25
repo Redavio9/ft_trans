@@ -137,17 +137,14 @@ export async function urlHandler() {
             site.innerHTML = await ticTacToeBoard();
             site.classList = 'site';
             const user = await tictactoe_getUser()
-            console.log("user in routes.js : ", user)
             socket_management_(user)
             closePopUp()
-            console.log("tictactoe_board")
             break ;
         case '/dashboard':
             const data = await TicTacToeStatistics()
             site.innerHTML = await ticTacToeDashboard(data);
             site.classList = 'site';
             drawCharts()
-            console.log("dashboard")
             break;
         case '/reset-password':
             site.innerHTML = await resetPasswordComponent('reset-password');

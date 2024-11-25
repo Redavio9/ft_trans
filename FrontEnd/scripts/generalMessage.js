@@ -91,7 +91,6 @@ class NotificationManager {
 
 
     gameRequestAccept(match_key){
-        console.log("gameRequestAccept", {match_key})
         joinTicTacToeMatch(match_key)
         history.pushState(null, null, `/tictactoe_board?match_key=${match_key}`);
         urlHandler();

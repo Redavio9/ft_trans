@@ -77,7 +77,6 @@ export function gameStartingComponentScript() {
             }))
         } else if (message.type == 'game_start') {
             data.roomName = message.message.roomName;
-            console.log(data.roomName);
             setTimeout(() => {
                 ws.close();
                 history.pushState(null, null, '/play');

@@ -239,8 +239,6 @@ export function gameScriptAi() {
             history.pushState(null, null, '/first-mode');
             urlHandler();
         }
-        console.log(`name is ${globalTournamentState.name}`);
-        console.log(`Game Over! ${winner} Wins!`);
     }
 
     // Helper function to check line-rectangle collision

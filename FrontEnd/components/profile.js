@@ -157,7 +157,6 @@ function getId(username) {
 
 function getMatches(user, games){
     let innerHTML = '';
-    console.log(games)
     games?.forEach(game => {
         let vs = `${getUsernameById(game.player_o_id)} vs ${getUsernameById(game.player_x_id)}`;
         let isWin = game.winner_id === user.id ? true : false;

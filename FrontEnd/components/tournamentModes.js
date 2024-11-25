@@ -208,13 +208,11 @@ export async function tournamentModesScript() {
         history.pushState(null, null, '/first-mode');
         return urlHandler();
     });
-    console.log('tournamentModesScript start ' + globalTournamentState.isContinue)
     if (!globalTournamentState.isContinue)
         return ;
     await delay(5000);
     if (!globalTournamentState.isContinue)
         return ;
-    console.log('tournamentModesScript end ' + globalTournamentState.isContinue)
     await startTournament();
 }
 
