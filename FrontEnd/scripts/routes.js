@@ -13,7 +13,7 @@ import { friendsComponent, friendsScript } from '../components/friends.js';
 import { profileComponent } from '../components/profile.js';
 import { classicGame, classicGameComponent } from '../components/play.js';
 import { searchComponent, searchComponentEvents } from '../components/search.js';
-import { resetPasswordComponent, resetPasswordScript } from '../components/resetPassword.js';
+import { resetPasswordComponent, resetPasswordScript, newPasswordReset } from '../components/resetPassword.js';
 import { ticTacToeComponent, ticTacToeBoard , ticTacToeDashboard } from '../components/tictactoe/tictactoe.js';
 import { socket_management_ } from '../components/tictactoe/board.js'
 import { tictactoe_getUser } from '../components/tictactoe/fetch.js'
@@ -152,17 +152,18 @@ export async function urlHandler() {
         case '/reset-password':
             site.innerHTML = await resetPasswordComponent('reset-password');
             site.classList = 'site ';
-            resetPasswordScript()
+            await resetPasswordScript()
             break;
         
         case '/new-password':
             site.innerHTML = await resetPasswordComponent('new-password');
             site.classList = 'site ';
+            await newPasswordReset()
             break;
         
         default:
             site.innerHTML = `
-                <h2>404 Page Not Found</h2>
+                <h2 style="text-align: center; margin-top: 100px;">404 Page Not Found</h2>
             `;
             site.classList = 'site';
     }
@@ -171,4 +172,3 @@ export async function urlHandler() {
 
 window.addEventListener('load', urlHandler);
 window.onpopstate = urlHandler;
-// window.addEventListener('popstate', urlHandler);

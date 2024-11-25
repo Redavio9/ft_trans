@@ -15,15 +15,16 @@ export function SingInComponent() {
               </div>
               <div class="form-inputs">
                   <form action="/singup" method="post">
-                      <div class="filed">
+                        <div class="filed">
                             <label for="userName"><i class="far fa-user-circle"></i></label>
                             <input type="text" id="userName" name="userName" placeholder="Username" required />
-                      </div>
-                      <div class="filed password">
+                        </div>
+                        <div class="filed password">
                             <label for="password"><i class="fas fa-lock"></i></label>
                             <input type="password" id="password" name="password" placeholder="Password" required />
                             <span class="password-eye"><i class="fas fa-eye-slash"></i></span>
-                      </div>
+                        </div>
+                        <p class="forgetPassword">Forgot Password?</p>
                       <button type="submit-singup">Sign In <i class="fas fa-sign-in-alt"></i></button>
                   </form>
                   <div class="form-social">
@@ -36,12 +37,12 @@ export function SingInComponent() {
                   </div>
               </div>
           </div>
-            <div class="modal" style="display: block;">
+            <div class="modal" style="display: none;">
                 <div class="two-fa-modal">
                     <div class="two-fa-modal-content">
                         <span class="close">×</span>
                         <h2>Enter 2FA Code</h2>
-                        <input type="text" id="2faCode" placeholder="2FA Code">
+                        <input type="text" id="_2faCode" placeholder="2FA Code">
                         <button class="btn confirm-2fa">Confirm</button>
                     </div>
                 </div>
@@ -54,6 +55,12 @@ export async function SingUpComponentScript() {
     const passwordEye = document.querySelector('.password-eye');
     const password = document.querySelector('#password');
     const close = document.querySelector('.two-fa-modal .close');
+    const forgetPassword = document.querySelector('.forgetPassword');
+
+    forgetPassword?.addEventListener('click', function () {
+        history.pushState(null, null, '/reset-password');
+    return urlHandler();
+    });
 
     if (password) {
         password.addEventListener('paste', function (e) {
@@ -103,12 +110,50 @@ export async function SingUpComponentScript() {
             });
 
             response.json().then(data => {
+                console.log(data)
                 if (data.error) {
                     handleViewMessage({
                         status: 'error',
                         message: data.error,
                         type: 'error',
                         icon: 'fas fa-exclamation-triangle'
+                    })
+
+                } else if (data.two_fa) {
+                    handleViewMessage({
+                        status: 'success',
+                        message: '2FA Code has been sent to your email',
+                        type: 'success',
+                        icon: 'fas fa-check-circle'
+                    })
+                    document.querySelector('.sing-forms .modal').style.display = 'block';
+                    document.querySelector('.confirm-2fa')?.addEventListener('click', async function () {
+                        const twoFaCode = document.querySelector('#_2faCode').value;
+                        const data = await fetch('http://127.0.0.1:8000/api/2fa/', {
+                            method: 'POST',
+                            credentials: 'include',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                'otp_code': twoFaCode
+                            })
+                        }).then(data => data.json())
+                        if (data?.error) {
+                            handleViewMessage({
+                                status: 'error',
+                                message: data.error,
+                                type: 'error',
+                                icon: 'fas fa-exclamation-triangle'
+                            })
+                        } else {
+                            showLoginNotification();
+                            (async () => {
+                                await fetchProfile();
+                                history.pushState(null, null, '/');
+                                urlHandler();
+                            })();
+                        }
                     })
                 } else {
                     showLoginNotification();

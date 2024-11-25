@@ -56,7 +56,7 @@ export function SingUpComponent() {
                         <span> OR </span>
                     </div>
                     <div class="social-icons">
-                        <a class="intra" href="#"><img src="../images/42intra.png" alt="42 intra" /> Sing up with 42 Intra</a>
+                        <a class="intra" href="https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-8a31ea6d5a286e79435ada2ca386c3ef0f6cc880d01c40ebd7670eb998768d49&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000%2Fapi%2Fcallback&response_type=code"><img src="../images/42intra.png" alt="42 intra" /> Sing up with 42 Intra</a>
                     </div>
                 </div>
             </div>

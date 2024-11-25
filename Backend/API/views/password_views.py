@@ -60,7 +60,7 @@ class PasswordResettingView(APIView):
 			status=status.HTTP_404_NOT_FOUND)
 
 		tokens = Utils.create_jwt_for_user(user)
-		absurl = f'http://127.0.0.1:3000/password-reset/?token={str(tokens["refresh_token"])}'
+		absurl = f'https://127.0.0.1:8008/new-password?token={str(tokens["refresh_token"])}'
 
 		email_body = f'Hi {user.username},\n\nPlease use the link below to reset your password:\n{absurl}'
 		data = {
@@ -84,7 +84,7 @@ class PasswordVerificationView(APIView):
 
 	def post(self, request: Request) -> Response:
 
-		token = request.GET.get('refresh_token')
+		token = request.data.get('refresh_token')
 
 		if not token:
 			return Response({
@@ -120,7 +120,7 @@ class PasswordConfirmationView(APIView):
 
 	def post(self, request: Request) -> Response:
 
-		token = request.GET.get('token')
+		token = request.data.get('token')
 
 		if not token:
 			return Response({

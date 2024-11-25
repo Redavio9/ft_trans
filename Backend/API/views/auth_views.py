@@ -249,11 +249,11 @@ class LoginConfirmationView(APIView):
 		token = Utils.create_one_time_jwt(user)
 
 		response = Response({
-			'success': "check your email for verification code",
+			'two_fa': "check your email for verification code",
 		},
 		status=status.HTTP_200_OK)
 
-		response.set_cookie("verification_token", str(token), httponly=False)
+		response.set_cookie("verification_token", str(token), httponly=False, secure=True, samesite='None')
 
 		return response
 
@@ -330,8 +330,8 @@ class TwoFactorAuthenticationView(APIView):
 
 		__jwt = Utils.create_jwt_for_user(user)
 
-		response.set_cookie(settings.ACCESS_TOKEN, __jwt[settings.ACCESS_TOKEN], httponly=False)
-		response.set_cookie(settings.REFRESH_TOKEN, __jwt[settings.REFRESH_TOKEN], httponly=True)
+		response.set_cookie(settings.ACCESS_TOKEN, __jwt[settings.ACCESS_TOKEN], httponly=False, secure=True, samesite='None')
+		response.set_cookie(settings.REFRESH_TOKEN, __jwt[settings.REFRESH_TOKEN], httponly=True, secure=True, samesite='None')
 		response.delete_cookie('verification_token')
 
 		return response
