@@ -99,7 +99,7 @@ export function homeContent() {
                 <div class="models">
                     <div class="model classic">
                         <h4>CLASSIC</h4>
-                        <p>play online game, with random person.</p>
+                        <p>play offine game, with your friend.</p>
                         <img src="images/classic.png" alt="" />
                         <a href="#">Play now</a>
                     </div>
