@@ -60,7 +60,7 @@ class PasswordResettingView(APIView):
 			status=status.HTTP_404_NOT_FOUND)
 
 		tokens = Utils.create_jwt_for_user(user)
-		absurl = f'https://127.0.0.1:8008/new-password?token={str(tokens["refresh_token"])}'
+		absurl = f'https://127.0.0.1/new-password?token={str(tokens["refresh_token"])}'
 
 		email_body = f'Hi {user.username},\n\nPlease use the link below to reset your password:\n{absurl}'
 		data = {

@@ -129,11 +129,11 @@ class Authentication42View(APIView):
 			ugs = UserGameStats.objects.create(user_id = serializer.instance)
 			ugs.save()
 
-			response = HttpResponseRedirect('https://127.0.0.1:8008/')
+			response = HttpResponseRedirect('https://127.0.0.1/')
 
 			__jwt = Utils.create_jwt_for_user(serializer.instance)
 
-			# response.redirec('https://127.0.0.1:8008/')
+			# response.redirec('https://127.0.0.1/')
 			response.set_cookie(settings.ACCESS_TOKEN, __jwt['access_token'], httponly=False, secure=True, samesite='None')
 			response.set_cookie(settings.REFRESH_TOKEN, __jwt['refresh_token'], httponly=True, secure=True, samesite='None')
 			
@@ -149,7 +149,7 @@ class Authentication42View(APIView):
 				},
 				status=status.HTTP_400_BAD_REQUEST)
 			
-			response = HttpResponseRedirect('https://127.0.0.1:8008/')
+			response = HttpResponseRedirect('https://127.0.0.1/')
 
 			__jwt = Utils.create_jwt_for_user(user)
 
