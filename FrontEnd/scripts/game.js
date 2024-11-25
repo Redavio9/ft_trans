@@ -157,10 +157,10 @@ export function gameScriptAi() {
 
     // move player using keyboard
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowUp' || e.key == 'w') {
-            LeftPlayer.y -= 30
-        } else if (e.key === 'ArrowDown' || e.key == 's') {
-            LeftPlayer.y += 30
+        if ((e.key === 'w' || e.key === 'ArrowUp') && LeftPlayer.y > 0) {
+            LeftPlayer.y -= 50
+        } else if ((e.key === 's' || e.key === 'ArrowDown') && LeftPlayer.y < canvas.height - (LeftPlayer.height / 2)) {
+            LeftPlayer.y += 50
         }
     })
 
@@ -268,12 +268,6 @@ export function gameScriptAi() {
             return true;
         }
         return false;
-    }
-
-    // pause game
-    function pauseGame() {
-        
-        Ball.speed = 0
     }
 
     function game(){
