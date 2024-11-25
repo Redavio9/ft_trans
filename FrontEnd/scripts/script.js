@@ -1,7 +1,6 @@
 import { handleAcceptRequest, handleDeclineRequest } from "../components/search.js";
 import { fetchProfile } from "./fetchData.js";
 import { urlHandler } from "./routes.js";
-
 // Game script
 
 function event(e){
@@ -31,7 +30,6 @@ export function setUpEvent() {
             urlHandler();
         })
     }
-
     const tournamentLink = document.querySelector('.tournament a');
     if (tournamentLink) {
         tournamentLink.addEventListener('click', function (e) {

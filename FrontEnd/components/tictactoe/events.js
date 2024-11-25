@@ -20,14 +20,17 @@ export function createMatchEvent(){
 }
 
 export function playGameFrHome_(){
-    document.getElementById('playGameFrHome').addEventListener('click', async function(event) {
-        event.preventDefault();
-        
-        const match_key = await createTicTacToeMatch();
-        console.log({match_key})
-        if (match_key)
-            redirectToGameBoard(match_key)
-    });
+    const playGame = document.getElementById('playGameFrHome');
+    if(playGame){
+        playGame.addEventListener('click', async function(event) {
+            event.preventDefault();
+            
+            const match_key = await createTicTacToeMatch();
+            console.log({match_key})
+            if (match_key)
+                redirectToGameBoard(match_key)
+        });
+    }
 }
 
 export function joinMatchEvent(){

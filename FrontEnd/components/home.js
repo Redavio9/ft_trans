@@ -204,6 +204,12 @@ export async function chartScript() {
     const pieCtxTicTac = document.getElementById('pieChart-tic-tac').getContext('2d');
 
     const data = await TicTacToeStatistics()
+    if (data.win_count == 0 && data.draw_count == 0 &&  data.loss_count == 0){
+
+        data.win_count = 100;
+        data.draw_count = 100;
+        data.loss_count = 100;
+    }
     const wonGames = data.win_count;
     const lostGames = data.loss_count;
     const drawGames = data.draw_count;
