@@ -67,125 +67,147 @@ class RegistrationView(APIView):
 		status=status.HTTP_201_CREATED)
 
 class Authentication42View(APIView):
+    permission_classes = [AllowAny]
 
-	permission_classes = [AllowAny]
+    def __init__(self):
+        self.code = ""
+        self.data = {
+            'grant_type': 'authorization_code',
+            'client_id': settings.CLIENT_ID,
+            'client_secret': settings.CLIENT_SECRET,
+            'code': self.code.encode('utf-8'),
+            'redirect_uri': settings.REDIRECT,
+        }
 
-	def __init__(self):
-		self.code = ""
-		self.data = {
-			'grant_type': 'authorization_code',
-			'client_id': settings.CLIENT_ID,
-			'client_secret': settings.CLIENT_SECRET,
-			'code': self.code.encode('utf-8'),
-			'redirect_uri': settings.REDIRECT,
-		}
+    def __get_code(self, request: Request) -> str:
+        self.code = request.GET.get('code')
+        return self.code
+    
+    def __get_token(self) -> str:
+        token = requests.post("https://api.intra.42.fr/oauth/token/", data=self.data)
+        if not "access_token" in token.json():
+            return None
+        return token.json()['access_token']
 
-	def __get_code(self, request: Request) -> str:
-		self.code = request.GET.get('code')
-		return self.code
-	
-	def __get_token(self) -> str:
-		__token = requests.post("https://api.intra.42.fr/oauth/token/", data=self.data)
-		if not "access_token" in __token.json():
-			return None
-		return __token.json()['access_token']
+    def __get_user(self, access_token: str) -> dict:
+        user = requests.get("https://api.intra.42.fr/v2/me", headers={
+            'Authorization': f'Bearer {access_token}'
+        })
+        return user.json()
+    
+    def __set_code_in_data(self, code: str) -> None:
+        self.data['code'] = code.encode('utf-8')
 
-	def __get_user(self, access_token: str) -> dict:
-		user = requests.get("https://api.intra.42.fr/v2/me", headers={
-			'Authorization': f'Bearer {access_token}'
-		})
-		return user.json()
-	
-	def __set_code_in_data(self, code: str) -> None:
-		self.data['code'] = code.encode('utf-8')
+    def __generate_unique_username(self, base_username: str) -> str:
+        """Generate a unique username by appending numbers if the base username exists."""
+        username = base_username
+        counter = 1
+        
+        while UserInfo.objects.filter(username=username).exists():
+            username = f"{base_username}{counter}"
+            counter += 1
+            
+        return username
 
-	def __register_user(self, user: dict, request: Request) -> None:
+    def __process_avatar(self, avatar_url: str) -> SimpleUploadedFile:
+        """Process and return avatar file from URL."""
+        requested_avatar = requests.get(avatar_url)
+        avatar_name = avatar_url.split('/')[-1]
+        return SimpleUploadedFile(avatar_name, requested_avatar.content, content_type='image/jpg')
 
-		first_name = user['first_name']
-		last_name = user['last_name']
-		username = user['login']
-		email = user['email']
-		avatar = user['image']['link']
+    def __create_response(self, user: UserInfo) -> HttpResponseRedirect:
+        """Create HTTP response with JWT tokens."""
+        response = HttpResponseRedirect('https://127.0.0.1/')
+        jwt = Utils.create_jwt_for_user(user)
+        
+        response.set_cookie(
+            settings.ACCESS_TOKEN, 
+            jwt['access_token'], 
+            httponly=False, 
+            secure=True, 
+            samesite='None'
+        )
+        response.set_cookie(
+            settings.REFRESH_TOKEN, 
+            jwt['refresh_token'], 
+            httponly=True, 
+            secure=True, 
+            samesite='None'
+        )
+        
+        return response
 
-		requested_avatar = requests.get(avatar)
-		avatar_name = avatar.split('/')[-1]
-		avatar = SimpleUploadedFile(avatar_name, requested_avatar.content, content_type='image/jpg')
+    def __register_user(self, user: dict, request: Request) -> HttpResponseRedirect:
+        first_name = user['first_name']
+        last_name = user['last_name']
+        base_username = user['login']
+        email = user['email']
+        avatar_url = user['image']['link']
 
-		serializer = RegistrationSerializer(data={
-			'username': username,
-			'first_name': first_name,
-			'last_name': last_name,
-			'email': email,
-			"gender": "M",
-			"avatar": avatar,
-		}, context={'request': request})
+        existing_user = UserInfo.objects.filter(email=email).first()
+        if existing_user:
+            return self.__create_response(existing_user)
 
-		if serializer.is_valid():
-			serializer.save()
+        username = self.__generate_unique_username(base_username)
+        
+        avatar = self.__process_avatar(avatar_url)
 
-			serializer.instance.is_verified = True
-			serializer.instance.save()
+        user_data = {
+            'username': username,
+            'first_name': first_name,
+            'last_name': last_name,
+            'email': email,
+            'gender': 'M',
+            'avatar': avatar,
+        }
 
-			ugs = UserGameStats.objects.create(user_id = serializer.instance)
-			ugs.save()
+        serializer = RegistrationSerializer(
+            data=user_data, 
+            context={'request': request}
+        )
 
-			response = HttpResponseRedirect('https://127.0.0.1/')
+        if serializer.is_valid():
+            # Save user and set up additional data
+            user = serializer.save()
+            user.is_verified = True
+            user.save()
 
-			__jwt = Utils.create_jwt_for_user(serializer.instance)
+            UserGameStats.objects.create(user_id=user)
 
-			# response.redirec('https://127.0.0.1/')
-			response.set_cookie(settings.ACCESS_TOKEN, __jwt['access_token'], httponly=False, secure=True, samesite='None')
-			response.set_cookie(settings.REFRESH_TOKEN, __jwt['refresh_token'], httponly=True, secure=True, samesite='None')
-			
+            return self.__create_response(user)
+        
+        return Response(
+            {'error': 'Failed to register user', 'details': serializer.errors},
+            status=status.HTTP_400_BAD_REQUEST
+        )
 
-			return response
+    def get(self, request: Request) -> Response:
+        if request.user.is_authenticated:
+            return Response({
+                'success': 'User already logged in',
+                'user': GetBasicUserInfoSerializer(request.user).data
+            },
+            status=status.HTTP_200_OK)
+        
+        self.code = self.__get_code(request)
+        self.__set_code_in_data(self.code)
 
-		else:
-			try:
-				user = UserInfo.objects.get(username=username)
-			except UserInfo.DoesNotExist:
-				return Response({
-					'error': 'failed to authenticate',
-				},
-				status=status.HTTP_400_BAD_REQUEST)
-			
-			response = HttpResponseRedirect('https://127.0.0.1/')
+        if not self.code:
+            return Response({
+                'error': 'No code was provided',
+            },
+            status=status.HTTP_400_BAD_REQUEST)
+        
+        access_token = self.__get_token()
 
-			__jwt = Utils.create_jwt_for_user(user)
+        if not access_token:
+            return Response({
+                'error': 'Failed to authenticate',
+            },
+            status=status.HTTP_400_BAD_REQUEST)
 
-			response.set_cookie(settings.ACCESS_TOKEN, __jwt['access_token'], httponly=False, secure=True, samesite='None')
-			response.set_cookie(settings.REFRESH_TOKEN, __jwt['refresh_token'], httponly=True, secure=True, samesite='None')
-
-			return response
-
-	def get(self, request: Request) -> Response:
-
-		if request.user.is_authenticated:
-			return Response({
-				'success': 'User already logged in',
-				'user': GetBasicUserInfoSerializer(request.user).data
-			},
-			status=status.HTTP_200_OK)
-		
-		self.code = self.__get_code(request)
-		self.__set_code_in_data(self.code)
-
-		if not self.code:
-			return Response({
-				'error': 'No code was provided',
-			},
-			status=status.HTTP_400_BAD_REQUEST)
-		
-		access_token = self.__get_token()
-
-		if not access_token:
-			return Response({
-				'error': 'Failed to authenticate',
-			},
-			status=status.HTTP_400_BAD_REQUEST)
-
-		user = self.__get_user(access_token)
-		return self.__register_user(user, request)
+        user = self.__get_user(access_token)
+        return self.__register_user(user, request)
 
 class LoginConfirmationView(APIView):
 
