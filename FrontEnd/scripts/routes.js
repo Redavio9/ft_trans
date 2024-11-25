@@ -64,10 +64,10 @@ export async function urlHandler() {
             site.classList = 'site';
             tournamentScript();
             break;
-        case '/ai':
+        case '/tournament-play':
             site.innerHTML = await gameAiComponent();
             site.classList = 'site';
-            gameScriptAi();
+            gameScriptAi(); 
             break;
         case '/game_setting':
             site.innerHTML = await gameSettingComponent();

@@ -17,6 +17,7 @@ export const globalTournamentState = {
     name: null,
     isWinner: false,
     isContinue: false,
+    isReset: false,
     vs: '',
     aiLevel: 0.08,
     round1: {
@@ -35,11 +36,12 @@ export const globalTournamentState = {
 }
 
 export function resetTournament() {
-    globalTournamentState.name = null,
-    globalTournamentState.isWinner = false,
-    globalTournamentState.isContinue = false,
-    globalTournamentState.vs = '',
-    globalTournamentState.aiLevel = 0.08,
+    globalTournamentState.name = null;
+    globalTournamentState.isReset = false;
+    globalTournamentState.isWinner = false;
+    globalTournamentState.isContinue = false;
+    globalTournamentState.vs = '';
+    globalTournamentState.aiLevel = 0.08;
     globalTournamentState.round1 = {
         match1: {player1: {username: '', score: null, status: 'waiting'}, player2: {username: 'Bob', score: null, status: 'waiting'}},
         match2: {player1: {username: 'Charlie', score: null, status: 'waiting'}, player2: {username: 'David', score: null, status: 'waiting'}},

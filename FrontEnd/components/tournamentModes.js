@@ -166,6 +166,9 @@ async function copyToClipboard(text) {
 }
 
 export async function tournamentModesScript() {
+    if (globalTournamentState.isReset) {
+        resetTournament();
+    }
     const leaveTournamentButton = document.querySelector('.first-mode .bottom-leave-button');
     if (leaveTournamentButton) {
         leaveTournamentButton.addEventListener('click', function () {
@@ -254,7 +257,7 @@ async function startTournament() {
     })
 
     await delay(5000);
-    history.pushState(null, null, '/ai');
+    history.pushState(null, null, '/tournament-play');
     urlHandler();
 }
 
@@ -388,9 +391,7 @@ async function hnadleTournamentRound1(user, ai) {
         globalTournamentState.round3.match1.player2.status = 'winner';
     }
 
-    globalTournamentState.isContinue = false;
-    globalTournamentState.isWinner = false;
-    globalTournamentState.name = null;
+    globalTournamentState.isReset = true;
 }
 
 async function hnadleTournamentRound2(user, ai) {
@@ -451,9 +452,7 @@ async function hnadleTournamentRound2(user, ai) {
         globalTournamentState.round3.match1.player2.status = 'winner';
     }
 
-    globalTournamentState.isContinue = false;
-    globalTournamentState.isWinner = false;
-    globalTournamentState.name = null;
+    globalTournamentState.isReset = true;
 }
 
 async function hnadleTournamentRound3(user, ai) {
@@ -470,7 +469,7 @@ async function hnadleTournamentRound3(user, ai) {
         globalTournamentState.round3.match1.player2.status = 'winner';
         await sendPlayerState('loser');
     }
-    globalTournamentState.name = null;
+    globalTournamentState.isReset = true;
 }
 
 async function sendPlayerState(type) {
