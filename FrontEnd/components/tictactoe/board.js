@@ -1,6 +1,6 @@
 // socket_manager.js
 let gameState = {
-    'player': '',
+    'player': 'X',
     'board': [],
     'move': '',
     'socket': null,
@@ -12,21 +12,6 @@ let gameState = {
     'timerInterval': 0,
     'totalSeconds': 0
 };
-
-function displayTime() {
-    const hours = Math.floor(gameState.totalSeconds / 3600).toString().padStart(2, '0');
-    const minutes = Math.floor((gameState.totalSeconds % 3600) / 60).toString().padStart(2, '0');
-    const seconds = (gameState.totalSeconds % 60).toString().padStart(2, '0');
-    document.getElementById("timer").textContent = `${hours}:${minutes}:${seconds}`;
-}
-
-function startTimer() {
-    if (gameState.timerInterval) return; // Prevent multiple intervals
-    gameState.timerInterval = setInterval(() => {
-    gameState.totalSeconds++;
-    displayTime();
-    }, 1000);
-}
 
 function removeMove(error, move){
     alert(error);
@@ -42,13 +27,25 @@ function lockEveryButton(){
     }
 }
 
+function displayWinnerPopUp(winner){
+    document.querySelector('.game-over-popup').style.display = 'block';
+    document.querySelector('.emoji').innerText = '🎉';
+    document.querySelector('h2').innerText = 'Match over!';
+    document.querySelector('p').innerText = `The Winner of this match is : ${winner}`;//check
+}
+
+function displayDrawPopUp(){
+    document.querySelector('.game-over-popup').style.display = 'block';
+    document.querySelector('.emoji').innerText = '🎉';
+    document.querySelector('h2').innerText = 'No Winner in this Match';
+}
+
 function socket_onmessage(){
     // Listen for messages from the server
     gameState.socket.onmessage = function(event) {
         const data = JSON.parse(event.data);
         gameState.gameStatus = data.status;
         if (gameState.gameStatus == "start"){
-            startTimer() // problem in the timer (i need to manage it in the Backend)
             gameState.move = data.move;
             gameState.player = data.player;
             console.log("data.match : ", data.match)
@@ -57,10 +54,11 @@ function socket_onmessage(){
             else {
                 if (data.winner == 'X' || data.winner == 'O') {
                     lockEveryButton()
-                    alert(`Player ${data.winner} wins!`);
+                    //fetch for the name of user using (data.user)
+                    displayWinnerPopUp(data.winner)//check
                 }
                 if (data.winner == 'Draw')
-                    alert('It\'s a draw!');
+                    displayDrawPopUp()
                 applyMoveToBoard()
             }
         }
@@ -115,8 +113,12 @@ async function setup_board(){
                 'Content-Type': 'application/json',
             }
     })
+    console.log("gameState.key : ", gameState.key)
     // Uncaught (in promise) Error: Network response was not ok
     if (!response.ok) {
+        // Log the error response text
+        const errorText = await response.text();
+        console.error('Error:', errorText);
         throw new Error('Network response was not ok');
     }
     const data = await response.json()
@@ -138,6 +140,7 @@ function socket_initializtions(){
         gameState.errorMessage = "roomName is null"
     } else {
         //Fetch for verify if roomName Valid or not
+        document.getElementById('Board_MatchKey').innerText = gameState.key
         gameState.player = 'X'
         gameState.socket = new WebSocket(`ws://127.0.0.1:8000/ws/tictactoe/${roomName}/`);
         gameState.images = {
@@ -145,15 +148,7 @@ function socket_initializtions(){
             'O': '../../images/tictactoe/O.png'
         };
         gameState.gameStatus = "";
-        setup_board()
-        console.log(
-                "gameState.images : ", gameState.images, 
-                "gameState.player : ", gameState.player, 
-                "gameState.gameStatus : ", gameState.gameStatus, 
-                {roomName}, "gameState.key : ", gameState.key,
-                "gameState.isError : " , gameState.isError,
-                "gameState.errorMessage : " , gameState.errorMessage
-        )  
+        // setup_board()
     }
 }
 
@@ -170,6 +165,7 @@ function sendMessageToServer(user_id){
                         'player': gameState.player,
                         'user': user_id
                     }));
+
                 }
             }
         });
@@ -180,6 +176,7 @@ function applyMoveToBoard(){
     const button = document.getElementById(gameState.move);
     button.innerHTML = `<img src="${gameState.images[gameState.player]}" alt="${gameState.player}" width="30%">`;
     button.disabled = true;  // Disable the button after it's clicked to prevent further moves
+    document.getElementById('turnof').innerText = gameState.player == 'X' ? 'O' : 'X'
 }
 
 export function socket_management_(user_id){

@@ -1,4 +1,5 @@
 import { fetchProfile, globalState } from '../scripts/fetchData.js';
+import { TicTacToeStatistics } from '../components/tictactoe/fetch.js'
 
 export async function homeComponent() {
     await fetchProfile();
@@ -129,24 +130,12 @@ export function homeContent() {
 
             <div class="charts-row">
                 <div class="chart-container">
-                    <canvas id="Pie" width="380" height="400"></canvas>
+                    <canvas id="Pie" width="400" height="400"></canvas>
                 </div>
             </div>
-            <div class="charts-row">
-                <div class="chart-container">
-                    <canvas id="LineChart" width="380" height="400"></canvas>
-                </div>
-            </div>
-
             <div class="charts-row">
                 <div class="chart-container">
                     <canvas id="pieChart-tic-tac"></canvas>
-                </div>
-            </div>
-
-            <div class="charts-row">
-                <div class="chart-container">
-                    <canvas id="pieChart-ping"></canvas>
                 </div>
             </div>
         </div>
@@ -211,26 +200,29 @@ function friends() {
 
 }
 
-export function chartScript() {
+export async function chartScript() {
     const pieCtxTicTac = document.getElementById('pieChart-tic-tac').getContext('2d');
-    const pieCtxPing = document.getElementById('pieChart-ping').getContext('2d');
 
-    const totalGames = 247;
-    const wonGames = Math.round(totalGames * 0.68);
-    const lostGames = totalGames - wonGames;
+    const data = await TicTacToeStatistics()
+    const wonGames = data.win_count;
+    const lostGames = data.loss_count;
+    const drawGames = data.draw_count;
+    // const totalGames = wonGames + lostGames;
 
     const pieChartTicTac = new Chart(pieCtxTicTac, {
         type: 'doughnut',
         data: {
-            labels: ['Victories', 'Defeats'],
+            labels: ['Victories', 'Defeats', 'Draws'],
             datasets: [{
-                data: [wonGames, lostGames],
+                data: [wonGames, lostGames, drawGames],
                 backgroundColor: [
                     'rgba(111, 166, 255, 0.8)',
+                    'rgba(111, 166, 200, 1.5)',
                     'rgba(255, 107, 161, 0.8)'
                 ],
                 borderColor: [
                     'rgba(111, 166, 255, 1)',
+                    'rgba(111, 166, 200, 1.2)',
                     'rgba(255, 107, 161, 1)'
                 ],
                 borderWidth: 2
@@ -243,52 +235,6 @@ export function chartScript() {
                 title: {
                     display: true,
                     text: 'Tic Tac Statistics',
-                    color: '#fff',
-                    font: {
-                        size: 16,
-                        family: "'Poppins', sans-serif",
-                        weight: '600'
-                    }
-                },
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        color: '#fff',
-                        padding: 20,
-                        font: {
-                            size: 14,
-                            family: "'Poppins', sans-serif"
-                        }
-                    }
-                }
-            }
-        }
-    });
-
-    const pieChartPing = new Chart(pieCtxPing, {
-        type: 'doughnut',
-        data: {
-            labels: ['Victories', 'Defeats'],
-            datasets: [{
-                data: [wonGames, lostGames],
-                backgroundColor: [
-                    'rgba(111, 166, 255, 0.8)',
-                    'rgba(255, 107, 161, 0.8)'
-                ],
-                borderColor: [
-                    'rgba(111, 166, 255, 1)',
-                    'rgba(255, 107, 161, 1)'
-                ],
-                borderWidth: 2
-            }]
-        },
-        options: {
-            responsive: true,
-            cutout: '65%',
-            plugins: {
-                title: {
-                    display: true,
-                    text: 'PingPong Statistics',
                     color: '#fff',
                     font: {
                         size: 16,
@@ -330,10 +276,11 @@ function drawText(ctx, text, x, y, options = {}) {
     ctx.fillText(text, x, y);
 }
 
+
 export function drawPieChartAnimated(data, canvasId) {
     const canvas = document.getElementById(canvasId);
     const ctx = canvas.getContext('2d');
-    const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'];
+    const colors = ['#3DBDA7', '#36A2EB', '#FFCE56', '#4BC0C0'];
     const x = canvas.width / 2;
     const y = canvas.height / 2;
     const radius = 150;
@@ -382,9 +329,12 @@ export function drawPieChartAnimated(data, canvasId) {
             startAngle += sliceAngle; // Update start angle for next slice
         });
         const colorss = {
-            wins: '#4CAF50', // Green for wins
-            draws: '#FFC107', // Yellow for draws
-            losses: '#F44336' // Red for losses
+            // wins:   '#4CAF50', // Green for wins
+            // draws:  '#FFC107', // Yellow for draws
+            // losses: '#FFFFFF' // Red for losses
+            wins:   '#3DBDA7',
+            draws:  '#36A2EB',
+            losses: '#FFCE56'
         };
         const padding = 70;
         // Draw legend
@@ -404,6 +354,7 @@ export function drawPieChartAnimated(data, canvasId) {
 
     requestAnimationFrame(animate);
 }
+
 
 
 
@@ -489,13 +440,15 @@ export function drawLineChartAnimated(dataSets, labels, canvasId) {
     requestAnimationFrame(animate);
 }
 
-export function drawCharts(){
-    let data = [0, 0, 0]
-    console.log(data.length)
-    if (data.length == 3 && data[0] == data[1] == data[2] == 0)
-        data[0] = data[1] = data[2] = 100
-    drawPieChartAnimated(data,'Pie');
-    drawLineChartAnimated({wins: [2, 5, 7, 10, 12, 19],
-        draws: [1, 2, 3, 4, 6, 8, 8],
-        losses: [3, 4, 6, 8, 9, 11, 18]}, ['Wins', 'Draws', 'Losses'], 'LineChart');
+export async function drawCharts(){
+
+    const data = await TicTacToeStatistics()
+    console.log([data.win_count, data.draw_count, data.loss_count])
+    if (data.win_count == 0 && data.draw_count == 0 &&  data.loss_count == 0){
+
+        data.win_count = 100;
+        data.draw_count = 100;
+        data.loss_count = 100;
+    }
+    drawPieChartAnimated([data.win_count, data.draw_count, data.loss_count ],'Pie');
 }

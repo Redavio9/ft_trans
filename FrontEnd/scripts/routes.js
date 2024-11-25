@@ -17,7 +17,8 @@ import { resetPasswordComponent, resetPasswordScript } from '../components/reset
 import { ticTacToeComponent, ticTacToeBoard , ticTacToeDashboard } from '../components/tictactoe/tictactoe.js';
 import { socket_management_ } from '../components/tictactoe/board.js'
 import { tictactoe_getUser } from '../components/tictactoe/fetch.js'
-import { manageEvents } from '../components/tictactoe/events.js'
+import { manageEvents, closePopUp, playGameFrHome_ } from '../components/tictactoe/events.js'
+import { TicTacToeStatistics } from '../components/tictactoe/fetch.js'
 
 export async function urlHandler() {
     const routeName = window.location.pathname;
@@ -51,6 +52,7 @@ export async function urlHandler() {
         case '/game':
             site.innerHTML = await gameComponent();
             site.classList = 'site gameComponent';
+            playGameFrHome_()
             break;
         case '/game_starting':
             site.innerHTML = await gameStartingComponent();
@@ -133,20 +135,20 @@ export async function urlHandler() {
             break;
         case '/tictactoe_board':
             site.innerHTML = await ticTacToeBoard();
-            // site.innerHTML = await tictactoeWaitingPly();
             site.classList = 'site';
             const user = await tictactoe_getUser()
             console.log("user in routes.js : ", user)
             socket_management_(user)
+            closePopUp()
             console.log("tictactoe_board")
-            break;
+            break ;
         case '/dashboard':
-            site.innerHTML = await ticTacToeDashboard();
+            const data = await TicTacToeStatistics()
+            site.innerHTML = await ticTacToeDashboard(data);
             site.classList = 'site';
             drawCharts()
             console.log("dashboard")
             break;
-
         case '/reset-password':
             site.innerHTML = await resetPasswordComponent('reset-password');
             site.classList = 'site ';

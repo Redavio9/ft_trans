@@ -7,11 +7,10 @@ class Match(models.Model):
     player_x = models.ForeignKey(UserInfo, related_name='match_player_x', on_delete=models.CASCADE)
     player_o = models.ForeignKey(UserInfo, related_name='match_player_o', on_delete=models.CASCADE, null=True, blank=True)
     winner = models.ForeignKey(UserInfo, related_name='match_winner', on_delete=models.CASCADE, null=True, blank=True)
+    loser = models.ForeignKey(UserInfo, related_name='match_loser', on_delete=models.CASCADE, null=True, blank=True)
     board = models.JSONField(default=dict)  # Stores the game board state
     current_turn = models.CharField(max_length=1, default='X')  # 'X' or 'O'
     created_at = models.DateTimeField(auto_now_add=True)
-    # Win | Draw | Loss
-    # terminated or not
 
     def clean(self):
         # Prevent the same user from being both player_x and player_o

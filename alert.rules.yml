@@ -1,13 +1,11 @@
-groups:
-  - name: http-alerts
+groups:   
+  - name: instance_down
     rules:
-      - alert: HighRequestRate 
-        expr: rate(http_requests_total[1m]) > 10
-        for: 1m  
+      - alert: InstanceDown
+        expr: up == 0
+        for: 10s
         labels:
-          severity: critical 
+          severity: critical
         annotations:
-          summary: "Taux de requêtes HTTP élevé." 
-          description: >
-            Le taux moyen de requêtes HTTP a dépassé 10 requêtes par seconde
-            pendant au moins 1 minute. Vérifiez le trafic ou les anomalies.
+          summary: "{{ $labels.instance }} down"
+          description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 10s."

@@ -32,17 +32,6 @@ export function setUpEvent() {
         })
     }
 
-    const firendsLink = document.querySelectorAll('.friends a');
-    if (firendsLink) {
-        firendsLink.forEach(link => {
-            link.addEventListener('click', function (e) {
-                e.preventDefault();
-                history.pushState(null, null, '/game_starting');
-                urlHandler();
-            })
-        })
-    }
-
     const tournamentLink = document.querySelector('.tournament a');
     if (tournamentLink) {
         tournamentLink.addEventListener('click', function (e) {

@@ -7,6 +7,8 @@ from django.views import View
 from .models import Match
 import random
 import string
+from django.db.models import Q
+from rest_framework.permissions import IsAuthenticated
 
 @api_view(['POST'])
 def join_match(request, match_key):
@@ -50,15 +52,54 @@ def create_match(request):
     return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
 
 class MatchView(View):
+    permission_classes = [IsAuthenticated]
     def get(self, request, match_key):
+        if not request.user.is_authenticated:
+            return JsonResponse({'error': 'User is not authenticated'}, status=401)
         try:
             match = Match.objects.get(match_key=match_key)
             return JsonResponse({'board': match.board, 'current_turn': match.current_turn, 'winner': match.winner})
-        except Match.DoesNotExist:
-            return JsonResponse({'error': 'Match not found'}, status=404)
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
 
-# @api_view(['GET'])
-# def matches_statistics(request):
-    # wins
-    # lost
-    # draw
+
+@api_view(['GET'])
+def matches_statistics(request):
+    # Win count for the player (e.g., Player X)
+    permission_classes = [IsAuthenticated]
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'User is not authenticated'}, status=401)
+    try:
+
+        player = request.user
+        # Loss count for the player (e.g., Player X)
+        win_count = Match.objects.filter(winner=player).count()
+
+        loss_count = Match.objects.filter(loser=player).count()
+        # Draw count (matches where the player participated, but no winner)
+        draw_count = Match.objects.filter(Q(player_x=player) | Q(player_o=player)).filter(winner__isnull=True).count()
+        # Total games played by the player (either player_x or player_o)
+        total_games_played = Match.objects.filter(Q(player_x=player) | Q(player_o=player)).count()
+
+        return JsonResponse({
+            'win_count': win_count,
+            'loss_count': loss_count,
+            'draw_count': draw_count,
+            'total_games_played': total_games_played
+        })
+    except Exception as e:
+        return JsonResponse({'error': f'Exception: {str(e)}'}, status=400)
+
+@api_view(['GET'])
+def match_history(request, id):
+    # Win count for the player (e.g., Player X)
+    permission_classes = [IsAuthenticated]
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'User is not authenticated'}, status=401)
+    try:
+        # player = request.user
+        matches = Match.objects.filter(Q(player_x=id) | Q(player_o=id)).values()
+
+        return JsonResponse({'status': 'success', 'matches': list(matches)})
+    except Exception as e:
+        return JsonResponse({'error': f'Exception: {str(e)}'}, status=400)

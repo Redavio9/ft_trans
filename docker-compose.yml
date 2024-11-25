@@ -84,6 +84,7 @@ services:
     volumes:
       - prometheus_data:/prometheus  
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./alert.rules.yml:/etc/prometheus/alert.rules.yml
     restart: unless-stopped
     networks:
       - monitoring
@@ -104,7 +105,7 @@ services:
     container_name: postgres_exporter
     restart: always
     environment:
-      - DATA_SOURCE_URI=postgres:5432/postgres?sslmode=disable
+      - DATA_SOURCE_URI=db:5432/postgres?sslmode=disable
       - DATA_SOURCE_USER=solix
       - DATA_SOURCE_PASS=1337
     ports:
@@ -130,15 +131,17 @@ services:
       - monitoring
 
   alertmanager:
-    image: prom/alertmanager:v0.26.0
+    image: prom/alertmanager:latest
     container_name: alertmanager
     restart: always
     volumes:
-      - ./alertmanager.yml:/etc/alertmanager/config.yml
+      - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml
     ports:
       - "9093:9093"
     networks:
       - monitoring
+    depends_on:
+      - prometheus
 
 
 
@@ -163,7 +166,7 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: ./Users/rlabbiz/Desktop/ft_trans/FrontEnd
+      device: ./Users/mbouyahy/Desktop/LastVersionTrd/FrontEnd
 
 
 #// ------------------------------------------------------- Networks ------------------------------------------------------------- //

@@ -1,10 +1,11 @@
-import { fetchProfile, globalState } from "../scripts/fetchData.js";
+import { fetchProfile, fetchUsers, globalState } from "../scripts/fetchData.js";
 import { header, menu } from "./home.js";
 import { getLastMatches } from "./profile.js";
 
 
 export async function gameComponent() {
     await fetchProfile();
+    await fetchUsers();
 
     if (!globalState.user) {
         return (`cant fetch data`);
@@ -13,12 +14,12 @@ export async function gameComponent() {
   return (
     header() +
     menu() + 
-    gameContent() +
-    gameSidebar()
+    await gameContent() +
+    await gameSidebar()
   )
 }
 
-export function gameContent() {
+export async function gameContent() {
     return (`
         <div class="content">
             <div class="game-mode">
@@ -55,13 +56,13 @@ export function gameContent() {
                 </div>
             </div>
 
-            ${getLastMatches()}
+            ${await getLastMatches(globalState.user)}
             
         </div>    
     `)
 }
 
-export function gameSidebar() {
+export async function gameSidebar() {
     return (`
         <div class="sidebar">
             <h2>Play With Friends</h2>
@@ -78,7 +79,7 @@ function friends() {
             <div class="friend">
                 <img src="${r.friend.avatar}" alt="${r.friend.username}'s photo">
                 <h4>${r.friend.first_name} ${r.friend.last_name}</h4>
-                <a href="#" key="${r.friend.username}">Play</a>
+                <a href="#" key="${r.friend.username}" id="playGameFrHome">Play</a>
             </div>
         `)
     })

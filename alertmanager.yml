@@ -1,14 +1,14 @@
-global:
-  resolve_timeout: 5m
-
 route:
-  receiver: 'email-notifications'
+  receiver: 'mail'
+  repeat_interval: 4h
+  group_by: [ alertname ]
 
 receivers:
-  - name: 'email-notifications'
+  - name: 'mail'
     email_configs:
-      - to: 'your-email@example.com'
-        from: 'alert@example.com'
-        smarthost: 'smtp.example.com:587'
-        auth_username: 'your-email@example.com'
-        auth_password: 'your-password'
+      - to: 'pingpongsection@gmail.com'
+        from: 'pingpongsection@gmail.com'
+        smarthost: smtp.gmail.com:587
+        auth_username: 'pingpongsection@gmail.com'
+        auth_identity: 'pingpongsection@gmail.com'
+        auth_password: 'xqsz eanx bzxe vhri'

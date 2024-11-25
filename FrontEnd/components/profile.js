@@ -6,6 +6,8 @@ import {
     fetchGamesResults,
 } from '../scripts/fetchData.js';
     
+import { getMatchesHistory } from '../components/tictactoe/fetch.js'
+
 export async function profileComponent() {
     await fetchProfile();
     await fetchUsers();
@@ -24,7 +26,7 @@ export async function profileComponent() {
             return (
                 header() +
                 menu() +
-                `<div id="profile" class="error">Dont found any user of this name: ${username}</div>`
+                `<div id="profile" class="error">Dont found any user with this name: ${username}</div>`
             )
         }
     }
@@ -32,11 +34,14 @@ export async function profileComponent() {
     return (
         header() +
         menu() +
-        profileContent(user)
+        await profileContent(user)
     )
 }
 
-function profileContent(user) {
+import { TicTacToeStatistics } from '../components/tictactoe/fetch.js'
+ 
+async function profileContent(user) {
+    const data = await TicTacToeStatistics()
     return (`
         <div id="profile">
             <div class="profile-header">
@@ -54,23 +59,23 @@ function profileContent(user) {
             <div class="stats-container" w-tid="20">
                 <div class="stat-box" w-tid="21">
                     <h3 w-tid="22">Matches Played</h3>
-                    <p w-tid="23">${user.game_stats[0].total_games}</p>
+                    <p w-tid="23">${data.total_games_played}</p>
                 </div>
                 <div class="stat-box" w-tid="24">
                     <h3 w-tid="25">Match Loses</h3>
-                    <p w-tid="26">${user.game_stats[0].lost_games}</p>
+                    <p w-tid="26">${data.loss_count}</p>
                 </div>
                 <div class="stat-box" w-tid="27">
                     <h3 w-tid="28">Match Wins</h3>
-                    <p w-tid="29">${user.game_stats[0].won_games}</p>
+                    <p w-tid="29">${data.win_count}</p>
                 </div>
                 <div class="stat-box" w-tid="30">
-                    <h3 w-tid="31">Tournament Wins</h3>
-                    <p w-tid="32">${user.game_stats[0].won_tournaments}</p>
+                    <h3 w-tid="31">Match Draws</h3>
+                    <p w-tid="32">${data.draw_count}</p>
                 </div>
             </div>
 
-            ${getLastMatches(user)}
+            ${await getLastMatches(user)}
             <div class="achievements">
                 <h2>Achievements</h2>
                 <div class="achievement-grid">
@@ -108,8 +113,10 @@ function profileContent(user) {
     `)
 }
 
-export function getLastMatches(user) {
-    if (!globalState.gamesResults) {
+export async function getLastMatches(user) {
+    const lastMatches = await getMatchesHistory(user.id);
+
+    if (lastMatches.length <= 0) {
         return (`
             <div class="match-history" w-tid="42">
                 <h2 w-tid="43" class="">Recent Matches</h2>
@@ -120,9 +127,6 @@ export function getLastMatches(user) {
         `)
     }
     
-    const lastMatches = globalState.gamesResults.filter(game => {
-        return (game.player_1 === user.username || game.player_2 === user.username)
-    })
     return (`
         <div class="match-history" w-tid="42">
             <h2 w-tid="43" class="">Recent Matches</h2>
@@ -133,39 +137,52 @@ export function getLastMatches(user) {
     `)
 }
 
-function getMatches(user, games){
-    const innerHtml = games.map(game => {
-        let score = '';
-        let vs = '';
-        let isWin = false;
-
-        if (game.player_1 === user.username && game.score_1 > game.score_2) 
-            isWin = true;
-        else if (game.player_2 === user.username && game.score_2 > game.score_1) 
-            isWin = true;
-
-        if (game.player_1 === user.username) {
-            score = `${game.score_1} - ${game.score_2}`;
-            vs = `${game.player_1} vs. ${game.player_2}`;
-        } else {
-            score = `${game.score_2} - ${game.score_1}`;
-            vs = `${game.player_2} vs. ${game.player_1}`;
-        }
-    
-        return (`
-            <div class="match-item">
-                <span>${vs}</span>
-                <span>Score: ${score}</span>
-                <span class="match-result ${isWin ? 'win': 'loss'}">${isWin ? 'Win': 'Lost'}</span>
-            </div>
-        `)
+function getUsernameById(id) {
+    let u = null
+    globalState.users.map(user => {
+        if (user.id === id)
+            u = user.username;
     })
-    if (innerHtml.length === 0)
+    return u;
+}
+
+function getId(username) {
+    let id = null
+    globalState.users.map(user => {
+        if (user.username === username)
+            id = user.id;
+    })
+    return id;
+}
+
+function getMatches(user, games){
+    let innerHTML = '';
+    console.log(games)
+    games?.forEach(game => {
+        let vs = `${getUsernameById(game.player_o_id)} vs ${getUsernameById(game.player_x_id)}`;
+        let isWin = game.winner_id === user.id ? true : false;
+        let isDraw = game.winner_id === null ? true : false;
+        
+            
+        let date = game.created_at
+        innerHTML += `
+            <div class="match-item">
+            <span>${vs}</span>
+            <span>Score: ${date}</span>
+            ${getSpan(isDraw, isWin)}
+            </div>`
+    })
+    if (innerHTML.length === 0)
         return (`<p>No matches found</p>`)
-    else if (innerHtml.length > 5)
-        return innerHtml.slice(0, 5).join('\n');
     else
-        return innerHtml.join('\n');
+        return innerHTML;
+}
+
+function getSpan(isDraw, isWin) {
+    if (!isDraw) {
+        return (`<span class="match-result ${isWin ? 'win': 'loss'}">${isWin ? 'Win': 'Lost'}</span>`)
+    } else 
+        return (`<span class="match-result draw">Draw</span>`)
 }
 
 function profileButtons(user) {

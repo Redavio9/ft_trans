@@ -68,6 +68,7 @@ class TicTacToeConsumer(AsyncWebsocketConsumer):
                 {
                     'type': 'player_move',
                     'move': move,
+                    'user': user,
                     'player': turn,
                     'winner': self.check_winner(match.board),
                     'status': self.status
@@ -93,12 +94,14 @@ class TicTacToeConsumer(AsyncWebsocketConsumer):
         move = event['move']
         player = event['player']
         winner = event['winner']
+        user_ = event['user']
 
         # Send move to WebSocket
         await self.send(text_data=json.dumps({
             'move': move,
             'player': player,
             'winner': winner,
+            'user': user_,
             'status': self.status
         }))
 
@@ -106,7 +109,6 @@ class TicTacToeConsumer(AsyncWebsocketConsumer):
     def get_match(self):
         from .models import Match
         return Match.objects.get(match_key=self.room_name)
-
 
     @sync_to_async
     def save_move(self, match, move, player):
@@ -118,8 +120,9 @@ class TicTacToeConsumer(AsyncWebsocketConsumer):
 
             # save move to the database
             winner = self.check_winner(match.board)
-            if winner:
+            if winner and winner != 'Draw':
                 match.winner = match.player_x if winner == 'X' else match.player_o
+                match.loser = match.player_o if winner == 'X' else match.player_x
             match.save()
 
     @sync_to_async
@@ -128,7 +131,6 @@ class TicTacToeConsumer(AsyncWebsocketConsumer):
             match.winner = match.player_x if winner == 'X' else match.player_o
         match.save()
 
-    
     async def save_winner(self, winner):
         match = await self.get_match()
         match.winner = winner
@@ -222,3 +224,42 @@ class TicTacToeConsumer(AsyncWebsocketConsumer):
             return {
                 'error': 'Match does not exist'
             }
+
+class WaitingPageConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        # from .models import Match
+        self.room_name = self.scope['url_route']['kwargs']['room_name']
+        self.room_group_name = f'tictactoe_{self.room_name}'
+        self.status = "waiting"
+
+        # Join room group
+        await self.channel_layer.group_add(
+            self.room_group_name,
+            self.channel_name
+        )
+
+        # Get the match object
+        await self.accept()
+        self.match = await self.get_match_count()
+        print("N of matches : ", self.match, " matches id = ", self.room_name)
+        if (self.match == 2):
+            await self.send(text_data=json.dumps({
+                'type': 'game_start'
+            }))
+        self.status = "start"
+    
+    async def disconnect(self, close_code):
+        # Leave room group
+        await self.channel_layer.group_discard(
+            self.room_group_name,
+            self.channel_name
+        )
+
+    @sync_to_async
+    def get_match_count(self):
+        from .models import Match
+        target = Match.objects.get(match_key=self.room_name)
+        if (target.player_o is not None and target.player_x is not None):
+            return 2
+        else:
+            return 1

@@ -1,4 +1,4 @@
-import { createTicTacToeMatch, joinTicTacToeMatch } from './fetch.js'
+import { createTicTacToeMatch, joinTicTacToeMatch, TicTacToeStatistics } from './fetch.js'
 import { urlHandler } from "../../scripts/routes.js";
 
 function redirectToGameBoard(roomName)
@@ -19,6 +19,17 @@ export function createMatchEvent(){
     });
 }
 
+export function playGameFrHome_(){
+    document.getElementById('playGameFrHome').addEventListener('click', async function(event) {
+        event.preventDefault();
+        
+        const match_key = await createTicTacToeMatch();
+        console.log({match_key})
+        if (match_key)
+            redirectToGameBoard(match_key)
+    });
+}
+
 export function joinMatchEvent(){
     document.getElementById('joinMatchForm').addEventListener('submit', async function(event) {
         event.preventDefault();
@@ -30,7 +41,7 @@ export function joinMatchEvent(){
     });
 }
 
-export function displayStatistics(){
+export async function displayStatistics(){
     document.getElementById('tictactoe_statistic').addEventListener('submit', function(event) {
         event.preventDefault();
         history.pushState(null, null, `/dashboard`);
@@ -42,4 +53,11 @@ export function manageEvents(){
     createMatchEvent()
     joinMatchEvent()
     displayStatistics()
+}
+
+export function closePopUp(){
+    document.querySelector('.exit').addEventListener('click', () => {
+        history.pushState(null, null, '/tic-tac');
+        urlHandler();
+    })
 }
