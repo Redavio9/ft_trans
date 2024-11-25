@@ -3301,3 +3301,16 @@ p.forgetPassword:hover {
 .chart-container {
     max-width: 400px;
 }
+
+
+/* Added */
+#copyMatchKeyBtn {
+    background-color: #007BFF;
+    color: #ffffff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
+    transition: all 0.3s ease;
+}

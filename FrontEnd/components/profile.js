@@ -115,6 +115,7 @@ async function profileContent(user) {
 
 export async function getLastMatches(user) {
     const lastMatches = await getMatchesHistory(user.id);
+    console.log({lastMatches})
 
     if (lastMatches.length <= 0) {
         return (`
@@ -158,18 +159,20 @@ function getId(username) {
 function getMatches(user, games){
     let innerHTML = '';
     games?.forEach(game => {
-        let vs = `${getUsernameById(game.player_o_id)} vs ${getUsernameById(game.player_x_id)}`;
-        let isWin = game.winner_id === user.id ? true : false;
-        let isDraw = game.winner_id === null ? true : false;
-        
+        if (game.isTerminated) {
+            let vs = `${getUsernameById(game.player_o_id)} vs ${getUsernameById(game.player_x_id)}`;
+            let isWin = game.winner_id === user.id ? true : false;
+            let isDraw = game.winner_id === null ? true : false;
             
-        let date = game.created_at
-        innerHTML += `
-            <div class="match-item">
-            <span>${vs}</span>
-            <span>Date: ${date}</span>
-            ${getSpan(isDraw, isWin)}
-            </div>`
+                
+            let date = game.created_at
+            innerHTML += `
+                <div class="match-item">
+                <span>${vs}</span>
+                <span>Date: ${date}</span>
+                ${getSpan(isDraw, isWin)}
+                </div>`
+        }
     })
     if (innerHTML.length === 0)
         return (`<p>No matches found</p>`)

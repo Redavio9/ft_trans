@@ -60,3 +60,20 @@ export function closePopUp(){
         urlHandler();
     })
 }
+
+async function copyMatchKeyBtn(text) {
+    try {
+        await navigator.clipboard.writeText(text);
+    } catch (err) {}
+}
+
+export function copyMatchKeyEvent(){
+    const MatchKeyBtn = document.getElementById('copyMatchKeyBtn');
+    if (MatchKeyBtn) {
+        MatchKeyBtn.addEventListener('click', function () {
+            const match_key = document.getElementById('Board_MatchKey').innerText;
+            console.log({match_key})
+            copyMatchKeyBtn(match_key);
+        })
+    }
+}

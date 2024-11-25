@@ -66,6 +66,7 @@ export async function ticTacToeBoard() {
         <div id="app">
             <h1>Tic-Tac-Toe</h1>
             <div class="Board_MatchKey" id="Board_MatchKey">MatchKey</div>
+            <button id="copyMatchKeyBtn">Copy Key</button>
             <div class="playerTurn" id="playerTurn">Turn of : <strong id="turnof">  </strong></div>
             <div class="game-container">
                 <!-- Left player info -->
