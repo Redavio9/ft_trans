@@ -49,8 +49,8 @@ class TokenRefresherMiddleware:
 			request.COOKIES[settings.REFRESH_TOKEN] = str(tokens['refresh_token'])
 
 			response = self.get_response(request)
-			response.set_cookie(settings.ACCESS_TOKEN, str(tokens['access_token']), httponly=False )
-			response.set_cookie(settings.REFRESH_TOKEN, str(tokens['refresh_token']), httponly=True)
+			response.set_cookie(settings.ACCESS_TOKEN, str(tokens['access_token']), httponly=False, secure=True, samesite='None')
+			response.set_cookie(settings.REFRESH_TOKEN, str(tokens['refresh_token']), httponly=True, secure=True, samesite='None')
 
 			return response
 
