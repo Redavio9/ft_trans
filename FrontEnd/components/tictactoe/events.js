@@ -72,7 +72,6 @@ export function copyMatchKeyEvent(){
     if (MatchKeyBtn) {
         MatchKeyBtn.addEventListener('click', function () {
             const match_key = document.getElementById('Board_MatchKey').innerText;
-            console.log({match_key})
             copyMatchKeyBtn(match_key);
         })
     }

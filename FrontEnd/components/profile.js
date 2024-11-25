@@ -115,7 +115,6 @@ async function profileContent(user) {
 
 export async function getLastMatches(user) {
     const lastMatches = await getMatchesHistory(user.id);
-    console.log({lastMatches})
 
     if (lastMatches.length <= 0) {
         return (`
