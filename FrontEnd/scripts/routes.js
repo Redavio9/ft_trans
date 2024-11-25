@@ -17,7 +17,7 @@ import { resetPasswordComponent, resetPasswordScript, newPasswordReset } from '.
 import { ticTacToeComponent, ticTacToeBoard , ticTacToeDashboard } from '../components/tictactoe/tictactoe.js';
 import { socket_management_ } from '../components/tictactoe/board.js'
 import { tictactoe_getUser } from '../components/tictactoe/fetch.js'
-import { manageEvents, closePopUp, playGameFrHome_ } from '../components/tictactoe/events.js'
+import { manageEvents, closePopUp, playGameFrHome_, copyMatchKeyEvent } from '../components/tictactoe/events.js'
 import { TicTacToeStatistics } from '../components/tictactoe/fetch.js'
 
 export async function urlHandler() {
@@ -139,6 +139,7 @@ export async function urlHandler() {
             const user = await tictactoe_getUser()
             socket_management_(user)
             closePopUp()
+            copyMatchKeyEvent()
             break ;
         case '/dashboard':
             const data = await TicTacToeStatistics()

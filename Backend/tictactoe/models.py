@@ -11,7 +11,7 @@ class Match(models.Model):
     board = models.JSONField(default=dict)  # Stores the game board state
     current_turn = models.CharField(max_length=1, default='X')  # 'X' or 'O'
     created_at = models.DateTimeField(auto_now_add=True)
-
+    isTerminated = models.BooleanField(default=False)
     def clean(self):
         # Prevent the same user from being both player_x and player_o
         if self.player_x == self.player_o:

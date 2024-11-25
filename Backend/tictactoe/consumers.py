@@ -123,6 +123,8 @@ class TicTacToeConsumer(AsyncWebsocketConsumer):
             if winner and winner != 'Draw':
                 match.winner = match.player_x if winner == 'X' else match.player_o
                 match.loser = match.player_o if winner == 'X' else match.player_x
+            if winner:
+                match.isTerminated = True
             match.save()
 
     @sync_to_async
