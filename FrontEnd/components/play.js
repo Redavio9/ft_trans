@@ -49,7 +49,7 @@ export async function classicGameComponent() {
             </div>
             <canvas id="pong" width="950px" height="500"></canvas>
             <div class="player-field">
-                <img src="${data.otherUser.avatar}" alt="${data.otherUser.name}">
+                <img src="../images/avatars/avatar1.webp" alt="${data.otherUser.name}">
                 <h4>${data.otherUser.name}</h4>
             </div>
         </div>
@@ -265,7 +265,6 @@ export async function classicGame() {
             if (RightPlayer.score == WINNING_SCORE - 1) {
                 RightPlayer.score++;
                 gameOver('Right Player');
-                await saveGameResult(LeftPlayer.score, RightPlayer.score);
                 return ;
             }
             RightPlayer.score++;
@@ -274,7 +273,6 @@ export async function classicGame() {
             if (LeftPlayer.score == WINNING_SCORE - 1) {
                 LeftPlayer.score++;
                 gameOver('Left Player');
-                await saveGameResult(LeftPlayer.score, RightPlayer.score);
                 return ;
             }
             LeftPlayer.score++;
@@ -371,29 +369,4 @@ export async function classicGame() {
 
     coolCountdown(startGame, 5);
 
-}
-
-async function saveGameResult(score1, score2) {
-    const message = {}
-    if (score1 > score2) {
-        message['winner'] = globalState.user.username;
-        message['loser'] = data.otherUser.name;
-        message['winner_score'] =  score1
-        message['loser_score'] = score2
-    } else {
-        message['winner'] = data.otherUser.name;
-        message['loser'] = globalState.user.username;
-        message['winner_score'] = score2
-        message['loser_score'] = score1
-    }
-    console.log(message);
-    const response = await fetch('http://127.0.0.1:8000/api/game_recording/', {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(message)
-    }).then(response => response.json())
-    console.log(response);
 }

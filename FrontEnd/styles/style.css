@@ -2663,6 +2663,8 @@ body {
     height: 20px;
     border-radius: 50%;
     border: 2px solid #2A2B30;
+    bottom: 0;
+    right: 0;
 }
 
 .status-online {
@@ -3169,4 +3171,19 @@ body {
 body , #container{
     display: flex;
     justify-content: center;
+}
+
+/* forget password style */
+p.forgetPassword {
+    color: #757575;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+p.forgetPassword:hover {
+    color: var(--primary-color);
+}
+
+.logo img {
+    width: 100px;
 }

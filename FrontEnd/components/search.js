@@ -44,7 +44,6 @@ function searchContent(query) {
                             <div class="friend-name">${user.first_name} ${user.last_name}</div>
                             <div class="friend-level">Level: ${user.game_stats[0].level}</div>
                         </div>
-                        <div class="friend-registered">Registered: ${user.created_at}</div>
                     </div>
                 </div>
                 <div class="friend-actions">
@@ -72,9 +71,7 @@ function friendButton(user) {
     const declineButton = {innerHtml: `<i key=${user.username} class="fas fa-user-times"></i>`, class: 'btn btn-decline', key: user.username};
     const declineButtonReverse = {innerHtml: `<i key=${user.username} class="fas fa-user-times"></i>`, class: 'btn btn-decline-reverse', key: user.username};
     const unFriendButton = {innerHtml: `<i key=${user.username} class="fas fa-user-minus"></i>`, class: 'btn btn-unfriend', key: user.username};
-    const blockButton = {innerHtml: `<i key=${user.username} class="fas fa-user-slash"></i>`, class: 'btn btn-block', key: user.username};
     const sendMessageButton = {innerHtml: `<i key=${user.username} class="fas fa-envelope"></i>`, class: 'btn btn-message', key: user.username};
-    const playButton = {innerHtml: `<i key=${user.username} class="fas fa-gamepad"></i>`, class: 'btn btn-play', key: user.username};
     let isRequest = false;
     let isFriend = false;
     let isSend = false;
@@ -99,7 +96,7 @@ function friendButton(user) {
     if (isRequest) 
         return (getButtons([acceptButton, declineButton]))
     else if (isFriend)
-        return (getButtons([sendMessageButton, playButton, unFriendButton, blockButton]))
+        return (getButtons([sendMessageButton, unFriendButton]))
     else if (isSend)
         return (getButtons([declineButtonReverse]))
     else

@@ -1,12 +1,13 @@
 
 from rest_framework import serializers
 from ..models import UserInfo
+from ..utils import Utils
 
 class PasswordUpdatingSerializer(serializers.ModelSerializer):
 	
 	old_password = serializers.CharField(write_only=True, required=True)
-	new_password = serializers.CharField(write_only=True, required=True)
-	re_new_password = serializers.CharField(write_only=True, required=True)
+	new_password = serializers.CharField(write_only=True, required=True, validators=[Utils.password_validation])
+	re_new_password = serializers.CharField(write_only=True, required=True, validators=[Utils.password_validation])
 
 	class Meta:
 		model = UserInfo
@@ -31,8 +32,8 @@ class PasswordUpdatingSerializer(serializers.ModelSerializer):
 
 class PasswordResettingSerializer(serializers.ModelSerializer):
 	
-	new_password = serializers.CharField(write_only=True, required=True)
-	re_new_password = serializers.CharField(write_only=True, required=True)
+	new_password = serializers.CharField(write_only=True, required=True, validators=[Utils.password_validation])
+	re_new_password = serializers.CharField(write_only=True, required=True, validators=[Utils.password_validation])
 
 	class Meta:
 		model = UserInfo

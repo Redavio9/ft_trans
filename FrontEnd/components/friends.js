@@ -101,8 +101,7 @@ function friendsRequests(requests) {
                     </div>
                     <div class="friend-details" w-tid="27">
                         <div class="friend-name" w-tid="28">${r.sender.first_name} ${r.sender.last_name}</div>
-                        <div class="friend-level" w-tid="29">Level: ${r.sender.id}</div>
-                        <div class="friend-registered" w-tid="30">Registered: </div>
+                        <div class="friend-level" w-tid="29">Level: ${r.sender.game_stats[0].level}</div>
                     </div>
                 </div>
                 <div class="friend-actions">
@@ -136,14 +135,11 @@ function friendsList(friends) {
                     <div class="friend-details">
                         <div class="friend-name">${r.friend.first_name} ${r.friend.last_name}</div>
                         <div class="friend-level">Level: ${r.friend.game_stats[0].level}</div>
-                        <div class="friend-registered">Registered: May 15, 2022</div>
                     </div>
                 </div>
                 <div class="friend-actions">
                     <button class="btn btn-message" key="${r.friend.username}"><i key="${r.friend.username}" class="fas fa-envelope"></i></button>
-                    <button class="btn btn-play" key="${r.friend.username}"><i key="${r.friend.username}" class="fas fa-gamepad"></i></button>
                     <button class="btn btn-unfriend" key="${r.friend.username}"><i key="${r.friend.username}" class="fas fa-user-minus"></i></button>
-                    <button class="btn btn-block" key="${r.friend.username}"><i key="${r.friend.username}" class="fas fa-user-slash"></i></button>
                     <button class="btn btn-view" key="${r.friend.username}"><i key="${r.friend.username}" class="fas fa-eye"></i></button>
                 </div>
             </div>    

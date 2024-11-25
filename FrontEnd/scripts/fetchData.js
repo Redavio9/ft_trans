@@ -1,4 +1,5 @@
 import { showFriendRequest, handleFriendAccept, handleFriendDecline, showGameRequest } from "./generalMessage.js";
+import { urlHandler } from "./routes.js";
 
 export const globalState = {
     user: null,
@@ -69,7 +70,10 @@ export async function fetchProfile() {
         // if true then remove access_token and refresh_token from Cookies
         document.cookie = 'access_token' + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
         document.cookie = 'refresh_token' + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-        history.pushState(null, null, '/singin');
+        setTimeout(() => {
+            history.pushState(null, null, '/singin');
+            urlHandler();
+        }, 1000);
     }
 
     globalState.user = userData?.user;
