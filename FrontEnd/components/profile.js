@@ -167,7 +167,7 @@ function getMatches(user, games){
         innerHTML += `
             <div class="match-item">
             <span>${vs}</span>
-            <span>Score: ${date}</span>
+            <span>Date: ${date}</span>
             ${getSpan(isDraw, isWin)}
             </div>`
     })
