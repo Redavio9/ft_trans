@@ -3070,8 +3070,8 @@ body {
 /* search style sheet */
 
 .search-results .search-header p {
-    color: #dfdfdf;
-    font-size: 0.5em;
+    color: #CCC;
+    font-size: 1em;
 }
 
 /* charts style sheet */
