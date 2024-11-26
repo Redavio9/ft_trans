@@ -165,7 +165,7 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: ./Users/rlabbiz/Desktop/ft_trans/FrontEnd
+      device: ./Users/amait-ou/Desktop/ft_trans/FrontEnd
 
 
 #// ------------------------------------------------------- Networks ------------------------------------------------------------- //
