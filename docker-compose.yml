@@ -142,9 +142,8 @@ services:
     depends_on:
       - prometheus
   jenkins:
-    image: jenkins/jenkins:latest
+    build: .
     container_name: jenkins
-    user: jenkins
     restart: always
     volumes:
       - jenkins_home:/var/jenkins_home
