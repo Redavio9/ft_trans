@@ -141,6 +141,29 @@ services:
       - monitoring
     depends_on:
       - prometheus
+  jenkins:
+    image: jenkins/jenkins:latest
+    container_name: jenkins
+    user: jenkins
+    restart: always
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "8082:8080"
+  # ngrok:
+  #   image: ngrok/ngrok:latest
+  #   container_name: ngrok
+  #   ports:
+  #     - "4040:4040"
+  #   environment:
+  #     - NGROK_AUTH=2q45ELR7pS52akJ3IYWPvI89tBh_EYjogYcKPeUYCZmgTkJk
+  #   tunnels:
+  #     - name: 
+  #   networks:
+  #     - monitoring
+  #   depends_on:
+  #     - FrontEnd
 
 
 
@@ -158,6 +181,7 @@ volumes:
   monitoring:  
   grafana_data:
   portainer_data:
+  jenkins_home:
   esdata:
     driver: local
   frent:
@@ -165,7 +189,7 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: ./Users/amait-ou/Desktop/ft_trans/FrontEnd
+      device: ./Users/rarraji/Desktop/ft_trans/FrontEnd
 
 
 #// ------------------------------------------------------- Networks ------------------------------------------------------------- //
