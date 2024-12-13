@@ -1,3 +1,4 @@
+version: '3.7'
 
 services:
 
@@ -150,6 +151,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - "8082:8080"
+      - "50000:50000"
   # ngrok:
   #   image: ngrok/ngrok:latest
   #   container_name: ngrok

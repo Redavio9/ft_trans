@@ -1,16 +1,31 @@
-FROM jenkins/jenkins:latest
+FROM jenkins/jenkins:lts
 
 USER root
 
-# Mise à jour et installation de docker-compose
+# Install essential packages
 RUN apt-get update && \
     apt-get install -y \
-    make \
+    apt-utils \
+    apt-transport-https \
+    ca-certificates \
     curl \
+    gnupg \
+    lsb-release \
+    make \
     git \
     python3 \
-    python3-pip \
-    && curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose \
-    && chmod +x /usr/local/bin/docker-compose
+    python3-pip
+
+# Add Docker's official GPG key and repository
+RUN install -m 0755 -d /etc/apt/keyrings && \
+    curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg && \
+    chmod a+r /etc/apt/keyrings/docker.gpg && \
+    echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian bookworm stable" > /etc/apt/sources.list.d/docker.list
+
+# Install Docker
+RUN apt-get update && \
+    apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin docker-ce-rootless-extras docker-buildx-plugin && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 USER jenkins
